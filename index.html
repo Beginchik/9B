@@ -1,0 +1,3692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working Undercover — ESL Lesson</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.css">
+<style>
+:root {
+  --primary: #1a365d;
+  --primary-light: #2c5282;
+  --accent: #e53e3e;
+  --accent-warm: #dd6b20;
+  --success: #38a169;
+  --error: #e53e3e;
+  --bg: #f7fafc;
+  --card-bg: #ffffff;
+  --text: #2d3748;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --book-blue: #0b5cad;
+  --pink: #d63384;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.clickable-word {
+  color: var(--primary-light);
+  border-bottom: 1.5px dashed var(--primary-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.clickable-word:hover {
+  background: rgba(44, 82, 130, 0.1);
+  color: var(--primary);
+}
+
+.lesson-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.screen {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  position: sticky;
+  top: 10px;
+  z-index: 100;
+}
+.nav-bar .progress-info {
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+.nav-buttons { display: flex; gap: 12px; }
+.nav-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn.prev { background: var(--border); color: var(--text); }
+.nav-btn.next { background: var(--primary); color: white; }
+.nav-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.nav-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.section-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent-warm);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.ref-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.ref-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.ref-card:hover { border-color: var(--primary-light); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.ref-card.active { border-color: var(--primary); background: linear-gradient(135deg, #ebf4ff 0%, #f0fff4 100%); box-shadow: var(--shadow-lg); }
+.ref-card-icon { font-size: 40px; margin-bottom: 12px; }
+.ref-card-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+.ref-card-subtitle { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+
+.ref-section { display: none; animation: fadeIn 0.3s ease; }
+.ref-section.visible { display: block; }
+
+.vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.vocab-item {
+  background: #f7fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--primary);
+  text-align: center;
+}
+.vocab-item:hover { background: #ebf4ff; border-color: var(--primary-light); transform: translateY(-1px); }
+.vocab-preview { max-height: 200px; overflow: hidden; position: relative; }
+.vocab-preview.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(transparent, white);
+}
+.show-full-btn {
+  display: block;
+  margin: 12px auto;
+  padding: 8px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.show-full-btn:hover { background: var(--primary-light); }
+
+.grammar-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.grammar-table th, .grammar-table td {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.grammar-table th { background: #ebf4ff; font-weight: 700; color: var(--primary); }
+.grammar-table .highlight { background: #fefcbf; font-weight: 600; }
+.grammar-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--accent-warm);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.vocab-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.vocab-modal-overlay.visible { display: flex; }
+.vocab-modal {
+  background: white;
+  border-radius: var(--radius);
+  max-width: 480px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.vocab-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.vocab-modal-header h3 { font-size: 22px; color: var(--primary); }
+.vocab-modal-close {
+  width: 32px; height: 32px;
+  border: none;
+  background: var(--border);
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.vocab-modal-close:hover { background: var(--error); color: white; }
+.vocab-modal-body { padding: 24px; }
+.vocab-modal-image {
+  width: 100%;
+  height: 160px;
+  background: #f0f4f8;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.vocab-modal-image img { width: 100%; height: 100%; object-fit: contain; }
+.vocab-ipa { font-size: 16px; color: var(--text-light); margin-bottom: 4px; }
+.vocab-pos { font-size: 13px; color: var(--accent-warm); font-weight: 600; margin-bottom: 12px; }
+.vocab-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.vocab-audio-btn:hover { background: var(--primary-light); }
+.vocab-definition { font-size: 15px; margin-bottom: 12px; line-height: 1.5; }
+.vocab-examples {
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.vocab-examples p { font-size: 14px; margin-bottom: 6px; font-style: italic; color: var(--text); }
+.vocab-examples p:last-child { margin-bottom: 0; }
+.vocab-translation-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #f7fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--primary);
+  transition: all 0.2s;
+}
+.vocab-translation-btn:hover { background: #ebf4ff; }
+.vocab-translation {
+  display: none;
+  padding: 12px;
+  background: #f0fff4;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--success);
+}
+.vocab-translation.visible { display: block; }
+
+.main-image {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.main-image svg { width: 100%; height: 100%; }
+
+.lesson-overview {
+  background: linear-gradient(135deg, #ebf4ff 0%, #f0fff4 100%);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--primary);
+}
+.lesson-overview p { font-size: 16px; line-height: 1.7; }
+.lesson-overview .grammar-highlight { font-weight: 700; font-style: italic; color: var(--primary); }
+
+.image-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.image-trio-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  background: white;
+}
+.image-trio-item img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.image-trio-label {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  background: #f7fafc;
+}
+@media (max-width: 768px) {
+  .image-trio { grid-template-columns: 1fr; }
+  .image-trio-item img { height: 220px; }
+}
+
+.questions-list { list-style: none; counter-reset: q; }
+.questions-list li {
+  counter-increment: q;
+  padding: 16px 20px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  border-left: 3px solid var(--primary-light);
+}
+.questions-list li::before {
+  content: counter(q) ".";
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 8px;
+}
+
+.useful-lang-box {
+  background: #fffbeb;
+  border: 1px solid #f6e05e;
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-top: 20px;
+}
+.useful-lang-box h4 {
+  font-size: 14px;
+  color: var(--accent-warm);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.useful-lang-box ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.useful-lang-box li {
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid #f6e05e;
+}
+
+.matching-instruction { font-size: 16px; margin-bottom: 16px; color: var(--text); font-weight: 500; }
+.matching-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.matching-column h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 12px; }
+.match-word, .match-target {
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 15px;
+  font-weight: 500;
+  user-select: none;
+}
+.match-word { background: white; text-align: center; }
+.match-word:hover { border-color: var(--primary-light); background: #ebf4ff; }
+.match-word.selected { border-color: var(--primary); background: #ebf4ff; box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.2); }
+.match-word.correct { border-color: var(--success); background: #f0fff4; cursor: default; }
+.match-word.incorrect { border-color: var(--error); background: #fff5f5; animation: shake 0.4s ease; }
+.match-word.locked { pointer-events: none; opacity: 0.7; }
+.match-target {
+  background: #f7fafc;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  padding: 8px;
+}
+.match-target.filled { border-style: solid; border-color: var(--success); background: #f0fff4; }
+.match-target .placed-word { font-weight: 600; color: var(--success); }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.match-picture {
+  width: 100%;
+  height: 100px;
+  background: #f0f4f8;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.match-picture img { width: 100%; height: 100%; object-fit: cover; }
+
+.result-box {
+  text-align: center;
+  padding: 16px;
+  background: #f0fff4;
+  border-radius: var(--radius-sm);
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--success);
+  display: none;
+}
+.result-box.visible { display: block; }
+
+.reset-btn {
+  display: block;
+  margin: 16px auto 0;
+  padding: 10px 24px;
+  background: var(--border);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reset-btn:hover { background: #cbd5e0; }
+
+.verb-form {
+  background: #fefcbf;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.discovery-question {
+  padding: 16px 20px;
+  background: #fffbeb;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.gp-sentence {
+  padding: 16px 20px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.gp-options { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.gp-option {
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: white;
+}
+.gp-option:hover { border-color: var(--primary-light); }
+.gp-option.correct { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.gp-option.incorrect { border-color: var(--error); background: #fff5f5; animation: shake 0.4s; }
+.gp-option.locked { pointer-events: none; }
+
+.reading-text {
+  padding: 24px;
+  background: #f7fafc;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.reading-text p { margin-bottom: 12px; }
+.reading-text p:last-child { margin-bottom: 0; }
+
+.speaking-prompts { list-style: none; }
+.speaking-prompts li {
+  padding: 14px 18px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+  border-left: 3px solid var(--accent-warm);
+}
+
+.review-item {
+  padding: 16px 20px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+}
+.review-item label { display: block; font-size: 15px; margin-bottom: 8px; font-weight: 500; }
+.review-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+.review-input:focus { outline: none; border-color: var(--primary-light); }
+.review-input.correct { border-color: var(--success); background: #f0fff4; }
+.review-input.incorrect { border-color: var(--error); background: #fff5f5; }
+
+.homework-section {
+  background: #f0fff4;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 20px;
+  border: 1px solid #c6f6d5;
+}
+.homework-section h4 { color: var(--success); margin-bottom: 12px; font-size: 18px; }
+.checklist { list-style: none; margin-top: 12px; }
+.checklist li { padding: 6px 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.checklist li::before { content: '☐'; font-size: 16px; }
+
+.progress-dots { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
+.progress-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all 0.2s; }
+.progress-dot.active { background: var(--primary); transform: scale(1.3); }
+.progress-dot.completed { background: var(--success); }
+
+@media (max-width: 768px) {
+  .ref-cards { grid-template-columns: 1fr; }
+  .matching-container { grid-template-columns: 1fr; }
+  .section-title { font-size: 22px; }
+  .main-image { height: 220px; }
+  .nav-bar { flex-direction: column; gap: 12px; }
+  .lesson-container { padding: 12px; }
+}
+
+.split-image {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.split-image-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  background: white;
+}
+.split-image-item img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.split-image-label {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  background: #f7fafc;
+}
+@media (max-width: 768px) { .split-image { grid-template-columns: 1fr; } }
+
+/* Undercover Boss article styling */
+.ub-article {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.ub-header {
+  background: #1a1a1a;
+  padding: 24px 32px;
+  text-align: center;
+}
+.ub-header .ub-subtitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f6e05e;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.ub-header .ub-title {
+  font-size: 64px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: -4px;
+}
+.ub-header .ub-episode {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 18px;
+  background: white;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.ub-body {
+  padding: 24px 32px;
+  background: #faf8f0;
+}
+.ub-intro {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.ub-intro strong { color: var(--primary); }
+.ub-fact {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  line-height: 1.7;
+  border-left: 4px solid var(--primary-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ub-fact::before {
+  content: '●';
+  color: var(--accent-warm);
+  font-size: 12px;
+  line-height: 1.7;
+  flex-shrink: 0;
+}
+.ub-fact.fill {
+  display: block;
+  line-height: 2.4;
+}
+.ub-fact.fill::before {
+  content: '●';
+  color: var(--accent-warm);
+  font-size: 12px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.ub-image-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.ub-image-row img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+@media (max-width: 768px) {
+  .ub-header .ub-title { font-size: 42px; }
+  .ub-header .ub-subtitle { font-size: 20px; }
+  .ub-body { padding: 16px; }
+  .ub-image-row { grid-template-columns: 1fr; }
+  .ub-image-row img { height: 200px; }
+}
+
+/* Episode summary paragraphs */
+.ep-para {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  line-height: 1.8;
+  border-left: 4px solid var(--primary-light);
+}
+.ep-day {
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 8px;
+}
+.ep-quote {
+  text-align: center;
+  padding: 18px 16px;
+  background: #1a1a1a;
+  color: white;
+  border-radius: var(--radius-sm);
+  margin: 14px 0;
+}
+.ep-quote .q1 { font-size: 22px; font-weight: 800; }
+.ep-quote .q2 { font-size: 15px; font-weight: 600; margin-top: 4px; }
+.hl-word {
+  background: #fefcbf;
+  padding: 0 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1.5px dashed var(--accent-warm);
+  transition: all 0.15s;
+}
+.hl-word:hover { box-shadow: 0 0 0 2px var(--accent-warm); }
+.glossary-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 14px;
+}
+.glossary-box h5 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.glossary-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.glossary-chip {
+  padding: 6px 12px;
+  background: #f7fafc;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.glossary-chip:hover { background: #ebf4ff; border-color: var(--primary-light); }
+.hl-chip {
+  padding: 6px 14px;
+  background: #fefcbf;
+  border: 1px solid #f6e05e;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.hl-chip:hover { box-shadow: 0 0 0 2px var(--accent-warm); }
+
+/* True / False exercise */
+.tf-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.tf-num { font-weight: 700; color: var(--primary); flex-shrink: 0; }
+.tf-text { flex: 1; }
+.tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+.tf-btn {
+  min-width: 44px;
+  padding: 6px 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.tf-btn:hover { border-color: var(--primary-light); background: #ebf4ff; }
+.tf-btn.correct { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.tf-btn.incorrect { border-color: var(--error); background: #fff5f5; color: var(--error); animation: shake 0.4s; }
+.tf-btn.reveal { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.tf-btn.locked { pointer-events: none; }
+@media (max-width: 768px) { .tf-item { flex-direction: column; } .tf-buttons { align-self: flex-end; } }
+
+/* Underline clothes words */
+.uw {
+  cursor: pointer;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background 0.15s;
+}
+.uw:hover { background: #ebf4ff; }
+.uw.found { border-bottom: 2px solid var(--success); color: var(--success); font-weight: 600; }
+.uw.wrong { animation: shake 0.4s; background: #fff5f5; }
+
+/* Clothes matching (3b) */
+.clothes-words { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.clothes-word {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.clothes-word:hover { border-color: var(--primary-light); background: #ebf4ff; }
+.clothes-word.selected { border-color: var(--primary); background: #ebf4ff; box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.2); }
+.clothes-word.correct { border-color: var(--success); background: #f0fff4; color: var(--success); pointer-events: none; }
+.clothes-word.incorrect { border-color: var(--error); background: #fff5f5; animation: shake 0.4s; }
+.clothes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.clothes-card {
+  position: relative;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.clothes-card:hover { border-color: var(--primary-light); transform: translateY(-1px); }
+.clothes-card.filled { border-style: solid; border-color: var(--success); cursor: default; }
+.clothes-card.incorrect { border-color: var(--error); animation: shake 0.4s; }
+.clothes-num {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 24px; height: 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  z-index: 2;
+}
+.clothes-card img { width: 100%; height: 120px; object-fit: cover; display: block; background: #f0f4f8; }
+.clothes-label {
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  background: #f7fafc;
+  min-height: 35px;
+}
+.clothes-card.filled .clothes-label { color: var(--success); background: #f0fff4; }
+
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ebf4ff;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  border: 1px solid #bee3f8;
+}
+.audio-play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.audio-play-btn:hover { background: var(--primary-light); transform: scale(1.05); }
+.audio-play-btn.playing { background: var(--accent); }
+.audio-info { font-size: 14px; color: var(--text-light); }
+.audio-info strong { color: var(--primary); }
+
+.fill-blank-input {
+  display: inline-block;
+  min-width: 120px;
+  padding: 4px 10px;
+  border: 2px solid var(--primary-light);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  background: #fefcbf;
+  text-align: center;
+  transition: all 0.2s;
+  margin: 0 4px;
+}
+.fill-blank-input:focus { outline: none; border-color: var(--primary); background: white; }
+.fill-blank-input.correct { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.fill-blank-input.incorrect { border-color: var(--error); background: #fff5f5; color: var(--error); animation: shake 0.4s; }
+
+.verb-bank {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  border: 1px dashed var(--border);
+}
+.verb-bank-label {
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 600;
+  margin-right: 8px;
+  align-self: center;
+}
+.verb-chip {
+  padding: 6px 14px;
+  background: white;
+  border: 2px solid var(--primary-light);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.verb-chip:hover { background: #ebf4ff; }
+
+.rule-complete {
+  padding: 16px 20px;
+  background: #f0fff4;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.7;
+  border-left: 4px solid var(--success);
+}
+.rule-select {
+  padding: 6px 12px;
+  border: 2px solid var(--success);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  background: white;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: all 0.2s;
+}
+.rule-select:focus { outline: none; border-color: var(--primary); }
+.rule-select.correct { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.rule-select.incorrect { border-color: var(--error); background: #fff5f5; color: var(--error); animation: shake 0.4s; }
+.rule-select:disabled { cursor: default; opacity: 1; }
+
+/* ===== 9B textbook exercises (Screen 4) ===== */
+.ex9b-header {
+  background: linear-gradient(135deg, #e8f1fb 0%, #ffffff 100%);
+  border-left: 4px solid var(--book-blue);
+}
+.ex9b-header h4 { color: var(--book-blue); font-size: 20px; margin-bottom: 4px; }
+.ex9b-examples {
+  background: #eef4fb;
+  border: 1px solid #bee3f8;
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+}
+.ex-line {
+  font-size: 16px;
+  line-height: 2.2;
+  color: var(--text);
+}
+.ex-num {
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 10px;
+}
+.speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 8px;
+}
+.strong-verb { color: var(--book-blue); font-weight: 700; }
+.verb-bracket { color: var(--text-light); font-style: italic; margin-left: 4px; white-space: nowrap; }
+.ex-item {
+  padding: 10px 16px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+}
+.ex-example {
+  padding: 10px 16px;
+  background: #fffbeb;
+  border-left: 3px solid var(--accent-warm);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  font-size: 15px;
+  line-height: 2.1;
+}
+.opt-choice {
+  display: inline-block;
+  padding: 0 8px;
+  margin: 0 2px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-style: italic;
+  transition: all 0.15s;
+  color: var(--text);
+  user-select: none;
+}
+.opt-choice:hover { background: #ebf4ff; }
+.opt-choice.circled {
+  border-color: var(--book-blue);
+  background: #e8f1fb;
+  font-weight: 600;
+}
+.opt-choice.wrong { border-color: var(--error); background: #fff5f5; animation: shake 0.4s; }
+.opt-choice.dimmed { opacity: 0.5; }
+.opt-choice.locked { cursor: default; pointer-events: none; }
+.opt-choice.static { pointer-events: none; }
+.slash { color: var(--text-light); margin: 0 2px; font-style: italic; }
+.ex-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+
+/* ===== Screen 7: Listening (Sandra) & Pronunciation ===== */
+.sandra-photo { margin-bottom: 8px; }
+.sandra-photo img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+}
+.sandra-photo svg {
+  width: 100%;
+  height: 300px;
+  display: block;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+}
+.sandra-caption {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 600;
+}
+.pn-buttons { display: flex; gap: 14px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.pn-btn {
+  padding: 12px 26px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.pn-btn:hover { border-color: var(--primary-light); background: #ebf4ff; }
+.pn-btn.correct { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.pn-btn.incorrect { border-color: var(--error); background: #fff5f5; color: var(--error); animation: shake 0.4s; }
+.pn-btn.reveal { border-color: var(--success); background: #f0fff4; color: var(--success); }
+.pn-btn.locked { pointer-events: none; }
+
+.lb-item { padding: 12px 16px; background: #f7fafc; border-radius: var(--radius-sm); margin-bottom: 10px; }
+.lb-q { font-size: 15px; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+.lb-a {
+  display: none;
+  margin: 10px 0 0 26px;
+  padding: 10px 14px;
+  background: #f0fff4;
+  border-left: 3px solid var(--success);
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  color: var(--text);
+}
+.lb-a.visible { display: block; }
+.show-ans-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 4px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.show-ans-btn:hover { background: #ebf4ff; }
+
+.script-box {
+  display: none;
+  background: #faf8f0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-top: 12px;
+}
+.script-box.visible { display: block; }
+.script-line { margin-bottom: 10px; font-size: 15px; line-height: 1.7; }
+.script-line:last-child { margin-bottom: 0; }
+.script-speaker { font-weight: 800; color: var(--primary); margin-right: 6px; }
+
+.pron-sounds-row {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pink);
+  margin-bottom: 12px;
+}
+.pron-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 768px) { .pron-grid { grid-template-columns: 1fr; } }
+.pron-cell {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: white;
+}
+.pron-symbol {
+  flex: 0 0 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  background: #fdf2f8;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+}
+.pron-symbol:hover { background: #fce7f3; }
+.pron-ipa { font-size: 26px; font-weight: 800; color: var(--pink); }
+.pron-key { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
+.pron-words {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: center;
+  font-size: 17px;
+}
+.pron-word { cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: background 0.15s; }
+.pron-word:hover { background: #fdf2f8; }
+.ph { color: var(--pink); font-weight: 700; }
+.pron-sentence {
+  font-size: 17px;
+  line-height: 1.9;
+  padding: 10px 14px;
+  background: #f7fafc;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.say-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.say-btn:hover { background: var(--primary-light); transform: scale(1.05); }
+.sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 24px;
+  margin: 6px 0 0 24px;
+  font-size: 14px;
+  color: var(--text);
+}
+@media (max-width: 768px) { .sub-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <div class="nav-bar">
+    <div class="progress-info">
+      <span id="screenLabel">Screen 1 of 11</span>
+      <div class="progress-dots" id="progressDots"></div>
+    </div>
+    <div class="nav-buttons">
+      <button class="nav-btn prev" id="prevBtn" onclick="prevScreen()">← Back</button>
+      <button class="nav-btn next" id="nextBtn" onclick="nextScreen()">Next →</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 1: INTRODUCTION ==================== -->
+  <div class="screen active" id="screen1">
+    <span class="section-label">Preparation Step</span>
+    <h1 class="section-title">Working Undercover</h1>
+
+    <div class="main-image">
+      <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="300" fill="#1a365d"/>
+        <rect x="50" y="80" width="80" height="220" fill="#2c5282" rx="4"/>
+        <rect x="60" y="90" width="15" height="15" fill="#f6e05e" opacity="0.7"/>
+        <rect x="85" y="90" width="15" height="15" fill="#f6e05e" opacity="0.5"/>
+        <rect x="60" y="115" width="15" height="15" fill="#f6e05e" opacity="0.8"/>
+        <rect x="85" y="115" width="15" height="15" fill="#f6e05e" opacity="0.6"/>
+        <rect x="60" y="140" width="15" height="15" fill="#f6e05e" opacity="0.4"/>
+        <rect x="85" y="140" width="15" height="15" fill="#f6e05e" opacity="0.9"/>
+        <rect x="160" y="50" width="100" height="250" fill="#2b6cb0" rx="4"/>
+        <rect x="175" y="65" width="12" height="12" fill="#f6e05e" opacity="0.6"/>
+        <rect x="195" y="65" width="12" height="12" fill="#f6e05e" opacity="0.8"/>
+        <rect x="215" y="65" width="12" height="12" fill="#f6e05e" opacity="0.5"/>
+        <rect x="235" y="65" width="12" height="12" fill="#f6e05e" opacity="0.7"/>
+        <rect x="500" y="60" width="90" height="240" fill="#2c5282" rx="4"/>
+        <rect x="620" y="100" width="70" height="200" fill="#2b6cb0" rx="4"/>
+        <rect x="700" y="70" width="80" height="230" fill="#2c5282" rx="4"/>
+        <rect x="0" y="260" width="800" height="40" fill="#4a5568"/>
+        <ellipse cx="380" cy="145" rx="28" ry="8" fill="#1a202c"/>
+        <rect x="358" y="120" width="44" height="28" fill="#1a202c" rx="4"/>
+        <circle cx="380" cy="165" r="18" fill="#fbd38d"/>
+        <rect x="366" y="160" width="12" height="8" fill="#1a202c" rx="3"/>
+        <rect x="382" y="160" width="12" height="8" fill="#1a202c" rx="3"/>
+        <line x1="378" y1="164" x2="382" y2="164" stroke="#1a202c" stroke-width="1.5"/>
+        <rect x="360" y="183" width="40" height="55" fill="#1a202c" rx="4"/>
+        <polygon points="380,185 376,200 380,235 384,200" fill="#e53e3e"/>
+        <polygon points="372,183 380,190 388,183" fill="white"/>
+        <rect x="348" y="188" width="14" height="40" fill="#1a202c" rx="4" transform="rotate(-5, 355, 188)"/>
+        <rect x="398" y="188" width="14" height="40" fill="#1a202c" rx="4" transform="rotate(5, 405, 188)"/>
+        <circle cx="352" cy="230" r="6" fill="#fbd38d"/>
+        <circle cx="408" cy="230" r="6" fill="#fbd38d"/>
+        <rect x="405" y="222" width="28" height="20" fill="#744210" rx="3"/>
+        <rect x="365" y="238" width="14" height="30" fill="#2d3748" rx="3"/>
+        <rect x="383" y="238" width="14" height="30" fill="#2d3748" rx="3"/>
+        <rect x="363" y="264" width="18" height="8" fill="#1a202c" rx="3"/>
+        <rect x="381" y="264" width="18" height="8" fill="#1a202c" rx="3"/>
+      </svg>
+    </div>
+
+    <div class="lesson-overview">
+      <p>In this lesson, you'll learn how to talk about <strong>working undercover</strong> — what agents wear and what they do. You'll learn new <span class="clickable-word" data-word="clothes">clothes</span> words and practise the difference between <span class="grammar-highlight">Present Simple</span> and <span class="grammar-highlight">Present Continuous</span>.</p>
+    </div>
+
+    <div class="ref-cards">
+      <div class="ref-card" id="vocabCard" onclick="toggleRef('vocab')">
+        <div class="ref-card-icon">📖</div>
+        <div class="ref-card-title">Vocabulary</div>
+        <div class="ref-card-subtitle">Clothes words for this lesson</div>
+      </div>
+      <div class="ref-card" id="grammarCard" onclick="toggleRef('grammar')">
+        <div class="ref-card-icon">📝</div>
+        <div class="ref-card-title">Grammar</div>
+        <div class="ref-card-subtitle">Present Simple vs Present Continuous</div>
+      </div>
+    </div>
+
+    <div class="ref-section" id="vocabSection">
+      <div class="card">
+        <h3 style="margin-bottom:16px; color:var(--primary);">Lesson Vocabulary</h3>
+        <div class="vocab-preview collapsed" id="vocabPreview">
+          <div class="vocab-grid" id="vocabGrid"></div>
+        </div>
+        <button class="show-full-btn" id="showFullBtn" onclick="toggleVocabList()">Show full list</button>
+      </div>
+    </div>
+
+    <div class="ref-section" id="grammarSection">
+      <div class="card">
+        <h3 style="margin-bottom:16px; color:var(--primary);">Present Simple vs Present Continuous</h3>
+        
+        <h4 style="margin:16px 0 8px; color:var(--primary-light);">Present Simple</h4>
+        <p style="margin-bottom:8px;">We use the <strong>Present Simple</strong> for <span class="clickable-word" data-word="routines">routines</span>, <span class="clickable-word" data-word="habits">habits</span>, and <span class="clickable-word" data-word="facts">facts</span>.</p>
+        
+        <table class="grammar-table">
+          <tr><th>Form</th><th>Example</th></tr>
+          <tr><td>✅ Positive: subject + <span class="highlight">verb(s)</span></td><td>He <span class="highlight">wears</span> a suit every day.</td></tr>
+          <tr><td>❌ Negative: subject + <span class="highlight">don't/doesn't</span> + verb</td><td>She <span class="highlight">doesn't wear</span> a uniform.</td></tr>
+          <tr><td> Question: <span class="highlight">Do/Does</span> + subject + verb?</td><td><span class="highlight">Does</span> he <span class="highlight">wear</span> glasses?</td></tr>
+        </table>
+        <div class="grammar-note">💡 <strong>Remember:</strong> With he/she/it, add <strong>-s</strong> or <strong>-es</strong> to the verb.</div>
+
+        <h4 style="margin:20px 0 8px; color:var(--primary-light);">Present Continuous</h4>
+        <p style="margin-bottom:8px;">We use the <strong>Present Continuous</strong> for actions <span class="clickable-word" data-word="happening now">happening now</span> or <span class="clickable-word" data-word="temporary">temporary</span> situations.</p>
+        
+        <table class="grammar-table">
+          <tr><th>Form</th><th>Example</th></tr>
+          <tr><td>✅ Positive: subject + <span class="highlight">am/is/are</span> + <span class="highlight">verb-ing</span></td><td>He <span class="highlight">is wearing</span> a disguise today.</td></tr>
+          <tr><td>❌ Negative: subject + <span class="highlight">am/is/are not</span> + verb-ing</td><td>She <span class="highlight">isn't wearing</span> her uniform now.</td></tr>
+          <tr><td>❓ Question: <span class="highlight">Am/Is/Are</span> + subject + verb-ing?</td><td><span class="highlight">Is</span> he <span class="highlight">wearing</span> a hat?</td></tr>
+        </table>
+        <div class="grammar-note">💡 <strong>Key words:</strong> Present Simple → <em>every day, always, usually, often</em>. Present Continuous → <em>now, at the moment, today, right now</em>.</div>
+
+        <h4 style="margin:20px 0 8px; color:var(--primary-light);">Compare!</h4>
+        <table class="grammar-table">
+          <tr><th>Present Simple (routine)</th><th>Present Continuous (now)</th></tr>
+          <tr><td>He <span class="highlight">wears</span> jeans every day.</td><td>Today he <span class="highlight">is wearing</span> a suit.</td></tr>
+          <tr><td>She usually <span class="highlight">works</span> in a hospital.</td><td>But now she <span class="highlight">is working</span> undercover.</td></tr>
+          <tr><td>They <span class="highlight">don't wear</span> uniforms.</td><td>They <span class="highlight">aren't wearing</span> uniforms today.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 2: WARM-UP ==================== -->
+  <div class="screen" id="screen2">
+    <span class="section-label">Warm-up</span>
+    <h1 class="section-title">Three jobs — three outfits</h1>
+
+    <p style="font-size:16px; margin-bottom:20px; color:var(--text-light);">Look at the three pictures. This is the same man in three different situations. Discuss the questions with your teacher.</p>
+
+    <div class="image-trio">
+      <div class="image-trio-item">
+        <img src="assets/images/athome.png" alt="Man at home on sofa wearing a cream sweater">
+        <div class="image-trio-label">Picture 1 — at home</div>
+      </div>
+      <div class="image-trio-item">
+        <img src="assets/images/atwork.png" alt="Man in a dark suit and purple tie in an office">
+        <div class="image-trio-label">Picture 2 — at work (office)</div>
+      </div>
+      <div class="image-trio-item">
+        <img src="assets/images/undercover.png" alt="Man working undercover as a chef and as a hotel worker">
+        <div class="image-trio-label">Picture 3 — working undercover</div>
+      </div>
+    </div>
+
+    <ol class="questions-list">
+      <li>What <span class="clickable-word" data-word="clothes">clothes</span> is the man <span class="clickable-word" data-word="wearing">wearing</span> in picture 1 (at home)? Describe his sweater and trousers.</li>
+      <li>What is he <span class="clickable-word" data-word="wearing">wearing</span> in picture 2 (at work)? Look at his suit, shirt and tie.</li>
+      <li>In picture 3, he has two different jobs. What is he <span class="clickable-word" data-word="wearing">wearing</span> as a chef? What is he <span class="clickable-word" data-word="wearing">wearing</span> as a hotel worker?</li>
+      <li>Why is he <span class="clickable-word" data-word="wearing">wearing</span> different clothes in each picture? What does "<span class="clickable-word" data-word="undercover">undercover</span>" mean?</li>
+      <li>Which job do you think is the most <span class="clickable-word" data-word="difficult">difficult</span>? Why?</li>
+    </ol>
+
+    <div class="useful-lang-box">
+      <h4>Useful language</h4>
+      <ul>
+        <li>In picture 1/2/3, he's wearing...</li>
+        <li>He has a... on</li>
+        <li>Maybe he is a...</li>
+        <li>I think it means...</li>
+        <li>In my opinion...</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 3: VOCABULARY LEAD-IN ==================== -->
+  <div class="screen" id="screen3">
+    <span class="section-label">Vocabulary</span>
+    <h1 class="section-title">Match the words to the pictures</h1>
+
+    <p class="matching-instruction">Look at the pictures. Click a word, then click the matching picture. Try to guess the meaning from the picture!</p>
+
+    <div class="matching-container" id="matchingExercise">
+      <div class="matching-column">
+        <h4>Words</h4>
+        <div id="matchWords"></div>
+      </div>
+      <div class="matching-column">
+        <h4>Pictures</h4>
+        <div id="matchTargets"></div>
+      </div>
+    </div>
+
+    <div class="result-box" id="matchResult"></div>
+    <button class="reset-btn" onclick="resetMatching()">🔄 Reset</button>
+  </div>
+
+  <!-- ==================== SCREEN 4: GRAMMAR DISCOVERY (Undercover Boss) ==================== -->
+  <div class="screen" id="screen4">
+    <span class="section-label">Grammar</span>
+    <h1 class="section-title">Undercover Boss — notice the difference</h1>
+
+    <p style="font-size:16px; margin-bottom:20px;">
+      <strong>Task a:</strong> Read and listen to a text about a UK TV show. Why is the boss working undercover?
+    </p>
+
+    <!-- Audio player -->
+    <div class="audio-player">
+      <button class="audio-play-btn" id="audioPlayBtn" onclick="toggleArticleAudio()">▶</button>
+      <div class="audio-info">
+        <strong>Track 3.55</strong> — Listen to the text about Undercover Boss
+      </div>
+    </div>
+
+    <!-- Article -->
+    <div class="ub-article">
+      <div class="ub-header">
+        <div class="ub-subtitle">Undercover</div>
+        <div class="ub-title">Boss</div>
+      </div>
+      <div class="ub-body">
+        <p class="ub-intro">
+          <strong>UNDERCOVER BOSS</strong> is a TV show where different bosses work undercover. They want to know more about their workers and about problems in their companies. In episode 1, David Clarke, the boss of a big hotel chain, is working 'undercover' for a week in one of his hotels.
+        </p>
+
+        <div class="ub-image-row">
+          <img src="assets/images/text.png" alt="Undercover Boss article with photos of David Clarke">
+          <img src="assets/images/text.png" alt="Undercover Boss article continued" style="object-position: right;">
+        </div>
+
+        <!-- Example sentence — already completed -->
+        <div class="ub-fact">
+          He usually <span class="verb-form">works</span> in an office, but today he <span class="verb-form">is working</span> in a hotel.
+        </div>
+
+        <!-- Task b: student fills these in -->
+        <div class="ub-fact fill">
+          He usually <input type="text" class="fill-blank-input" data-tb="0" placeholder="..." onkeydown="if(event.key==='Enter')checkTextBlank(0)"> a suit, but today he <input type="text" class="fill-blank-input" data-tb="1" placeholder="... ..." onkeydown="if(event.key==='Enter')checkTextBlank(1)"> jeans and a T-shirt.
+        </div>
+        <div class="ub-fact fill">
+          He usually <input type="text" class="fill-blank-input" data-tb="2" placeholder="..." onkeydown="if(event.key==='Enter')checkTextBlank(2)"> important meetings, but today he <input type="text" class="fill-blank-input" data-tb="3" placeholder="... ..." onkeydown="if(event.key==='Enter')checkTextBlank(3)"> in the bedrooms.
+        </div>
+        <div class="ub-fact fill">
+          He usually <input type="text" class="fill-blank-input" data-tb="4" placeholder="..." onkeydown="if(event.key==='Enter')checkTextBlank(4)"> work at 6.00, but today he <input type="text" class="fill-blank-input" data-tb="5" placeholder="... ..." onkeydown="if(event.key==='Enter')checkTextBlank(5)"> at 8.00!
+        </div>
+      </div>
+    </div>
+
+    <!-- Task b: Verb bank + check controls -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Task b: Complete the sentences in the text with a verb from the list in the present simple or present continuous.</h4>
+      <p style="font-size:14px; color:var(--text-light); margin-bottom:12px;">Look at the example: <em>"He usually <strong>works</strong> in an office, but today he <strong>is working</strong> in a hotel."</em> Click a verb below to put it into the next blank, then change it to the correct form. Press <strong>Enter</strong> to check a blank, or use <strong>Check answers</strong>.</p>
+
+      <div class="verb-bank">
+        <span class="verb-bank-label">Verbs:</span>
+        <span class="verb-chip" data-verb="have" onclick="useVerb('have')">have</span>
+        <span class="verb-chip" data-verb="wear" onclick="useVerb('wear')">wear</span>
+        <span class="verb-chip" data-verb="work" onclick="useVerb('work')">work</span>
+        <span class="verb-chip" data-verb="finish" onclick="useVerb('finish')">finish</span>
+      </div>
+
+      <div class="ex-actions">
+        <button class="show-full-btn" style="margin:0;" onclick="checkAllTextBlanks()">Check answers</button>
+        <button class="reset-btn" style="margin:0;" onclick="resetTextBlanks()">🔄 Reset</button>
+      </div>
+
+      <div class="result-box" id="fillResult"></div>
+    </div>
+
+    <!-- Task c: Complete the rules (dropdowns) -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Task c: Complete the rules with <em>every day</em> and <em>today / now</em>.</h4>
+      
+      <div class="rule-complete">
+        Use the present simple to talk about
+        <select class="rule-select" id="ruleSelect1">
+          <option value="" disabled selected>— choose —</option>
+          <option value="every day">every day</option>
+          <option value="today / now">today / now</option>
+        </select>.
+      </div>
+      <div class="rule-complete">
+        Use the present continuous to talk about
+        <select class="rule-select" id="ruleSelect2">
+          <option value="" disabled selected>— choose —</option>
+          <option value="every day">every day</option>
+          <option value="today / now">today / now</option>
+        </select>.
+      </div>
+
+      <div class="ex-actions">
+        <button class="show-full-btn" style="margin:0;" onclick="checkRules()">Check</button>
+        <button class="reset-btn" style="margin:0;" onclick="resetRules()">🔄 Reset</button>
+      </div>
+
+      <div class="result-box" id="ruleResult"></div>
+    </div>
+
+    <!-- Discovery questions -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Think about it:</h4>
+      <div class="discovery-question">1. Look at the <span style="background:#fefcbf; padding:2px 6px; border-radius:4px; font-weight:700;">yellow verbs</span>. Which ones are about <strong>every day</strong> (his normal routine)? Which are about <strong>today</strong> (what's happening now)?</div>
+      <div class="discovery-question">2. What's the difference between "<span class="verb-form">works</span>" and "<span class="verb-form">is working</span>"? When do we use each form?</div>
+      <div class="discovery-question">3. Find the key words in the text: <em>usually</em> and <em>today</em>. Which tense does each word go with?</div>
+      <div class="discovery-question">4. Why is David Clarke <span class="clickable-word" data-word="wearing">wearing</span> jeans and a T-shirt today? What is his normal <span class="clickable-word" data-word="clothes">clothes</span> for work?</div>
+    </div>
+
+    <div class="card" style="background: linear-gradient(135deg, #ebf4ff 0%, #f0fff4 100%); border-left: 4px solid var(--primary);">
+      <h4 style="color:var(--primary); margin-bottom:8px;">The Rule:</h4>
+      <p style="font-size:15px; margin-bottom:8px;">📌 <strong>Present Simple</strong> = routines, habits, facts → <em>He wears a suit every day.</em></p>
+      <p style="font-size:15px;"> <strong>Present Continuous</strong> = happening now, temporary → <em>Today he is wearing jeans and a T-shirt.</em></p>
+    </div>
+
+    <!-- ============ 9B TEXTBOOK PRACTICE ============ -->
+    <div class="card ex9b-header">
+      <h4>9B — Present continuous or present simple?</h4>
+      <p style="font-size:14px; color:var(--text-light); margin-bottom:14px;">Extra practice from the textbook.</p>
+
+      <div class="audio-player">
+        <button class="audio-play-btn" id="exAudioPlayBtn" onclick="toggleExAudio()">▶</button>
+        <div class="audio-info">
+          <strong>Track 3.56</strong> — Listen and repeat the examples. Then read the rules.
+        </div>
+      </div>
+
+      <div class="ex9b-examples">
+        <div class="ex-line"><span class="ex-num">1</span>I <span class="strong-verb">work</span> in an office. I usually <span class="strong-verb">wear</span> a suit.</div>
+        <div class="ex-line"><span class="ex-num">2</span>Today I<span class="strong-verb">'m working</span> at home. I<span class="strong-verb">'m wearing</span> jeans.</div>
+      </div>
+    </div>
+
+    <!-- Exercise a: circle the correct form -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">a — Circle the correct form.</h4>
+
+      <div class="ex-example">
+        James usually <span class="opt-choice circled static">goes</span><span class="slash">/</span><span class="opt-choice static dimmed">is going</span> to university in the morning, but today he studies<span class="slash">/</span><span class="opt-choice circled static">is studying</span> at home.
+      </div>
+
+      <div id="exAContainer"></div>
+
+      <div class="result-box" id="exAResult"></div>
+      <button class="reset-btn" onclick="resetExA()">🔄 Reset</button>
+    </div>
+
+    <!-- Exercise b: complete the sentences -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">b — Complete the sentences with the verb in (brackets). Use the present simple or present continuous.</h4>
+
+      <div class="ex-example">
+        <em><u>Do</u></em> you usually <em><u>walk</u></em> to work? <span class="verb-bracket">(walk)</span>
+      </div>
+
+      <div id="exBContainer"></div>
+
+      <div class="ex-actions">
+        <button class="show-full-btn" style="margin:0;" onclick="checkAllExB()">Check answers</button>
+        <button class="reset-btn" style="margin:0;" onclick="resetExB()">🔄 Reset</button>
+      </div>
+
+      <div class="result-box" id="exBResult"></div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 5: GRAMMAR PRACTICE ==================== -->
+  <div class="screen" id="screen5">
+    <span class="section-label">Grammar Practice</span>
+    <h1 class="section-title">Choose the correct form</h1>
+
+    <p style="font-size:16px; margin-bottom:20px;">Read each sentence. Choose the correct verb form. Click to select your answer.</p>
+
+    <div id="grammarPractice"></div>
+
+    <div class="result-box" id="gpResult"></div>
+    <button class="reset-btn" onclick="resetGrammarPractice()">🔄 Reset</button>
+  </div>
+
+  <!-- ==================== SCREEN 6: EPISODE 1 SUMMARY + CLOTHES VOCABULARY ==================== -->
+  <div class="screen" id="screen6">
+    <span class="section-label">Listening & Vocabulary</span>
+    <h1 class="section-title">Undercover Boss — Episode 1 summary</h1>
+
+    <!-- Task a: read & listen, T/F -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Task a: Read and listen to the summary of episode 1. Use the glossary to help you. Then mark the sentences <strong>T</strong> (true) or <strong>F</strong> (false).</h4>
+
+      <div class="audio-player">
+        <button class="audio-play-btn" id="epAudioPlayBtn" onclick="toggleEpAudio()">▶</button>
+        <div class="audio-info">
+          <strong>Track 3.57</strong> — Listen to the Episode 1 summary
+        </div>
+      </div>
+
+      <div class="ub-article">
+        <div class="ub-header">
+          <div class="ub-subtitle">Undercover</div>
+          <div class="ub-title">Boss</div>
+          <div class="ub-episode">Episode 1 Summary</div>
+        </div>
+        <div class="ub-body">
+          <div class="ep-para"><span class="ep-day">Monday</span> David says he's a new worker, and that his name is 'Andy'. The other workers don't know who he really is. Today, he's working in the <span class="clickable-word" data-word="kitchen">kitchen</span>. He's washing the dishes. The people in the kitchen usually work 80 hours a week! One of the <span class="clickable-word" data-word="oven">ovens</span> isn't working, but David thinks the food is good.</div>
+          <div class="ep-para"><span class="ep-day">Tuesday</span> Today he's working in the <span class="clickable-word" data-word="bedroom">bedrooms</span>. Next week is a hotel inspection. The workers are <span class="clickable-word" data-word="repair">repairing</span> things, but only in the rooms for the hotel inspector. They aren't repairing things in the other rooms. David is <span class="hl-word" data-word="angry">angry</span>, but he can't say anything.</div>
+          <div class="ep-para"><span class="ep-day">Wednesday</span> Today David is working in the restaurant. He's <span class="hl-word" data-word="serving">serving</span> breakfast. He's wearing a uniform: a white jacket and a hat. The waiters and waitresses always work <span class="hl-word" data-word="very hard">very hard</span>.</div>
+          <div class="ep-para"><span class="ep-day">Thursday</span> David is <span class="clickable-word" data-word="clean">cleaning</span> rooms. The workers only have a quarter of an hour to clean a room. David is working very hard. He's very tired.</div>
+          <div class="ep-quote">
+            <div class="q1">'I'm not "Andy".</div>
+            <div class="q2">I'm David Clarke, your boss'</div>
+          </div>
+          <div class="ep-para">At the end of the week, David says: 'I'm not "Andy". I'm David Clarke, your boss'. The workers are very <span class="hl-word" data-word="surprised">surprised</span>. After the programme, David changes some things in the company. He <span class="hl-word" data-word="gives">gives</span> the good workers more money.</div>
+
+          <div class="glossary-box">
+            <h5>Glossary</h5>
+            <div class="glossary-chips">
+              <span class="glossary-chip" onclick="openVocabModal('kitchen')">kitchen</span>
+              <span class="glossary-chip" onclick="openVocabModal('oven')">oven</span>
+              <span class="glossary-chip" onclick="openVocabModal('bedroom')">bedroom</span>
+              <span class="glossary-chip" onclick="openVocabModal('clean')">clean</span>
+              <span class="glossary-chip" onclick="openVocabModal('repair')">repair</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tfList"></div>
+      <div class="result-box" id="tfResult"></div>
+      <button class="reset-btn" onclick="resetTF()">🔄 Reset</button>
+    </div>
+
+    <!-- Task b: highlighted words -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Task b: Read the text again. Guess the meaning of the highlighted words and phrases. Check with your teacher or a dictionary.</h4>
+      <p style="font-size:14px; color:var(--text-light); margin-bottom:12px;">Click a highlighted word to check your guess:</p>
+      <div class="glossary-chips">
+        <span class="hl-chip" onclick="openVocabModal('angry')">angry</span>
+        <span class="hl-chip" onclick="openVocabModal('serving')">serving</span>
+        <span class="hl-chip" onclick="openVocabModal('very hard')">very hard</span>
+        <span class="hl-chip" onclick="openVocabModal('surprised')">surprised</span>
+        <span class="hl-chip" onclick="openVocabModal('gives')">gives</span>
+      </div>
+    </div>
+
+    <!-- Task c: discussion -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Task c: Do you think <em>Undercover Boss</em> is a good idea for a TV programme?</h4>
+      <ul class="speaking-prompts">
+        <li>I think it's a good idea because... <em>(the boss understands his workers better)</em></li>
+        <li>In my opinion, it's a bad idea because... <em>(the workers feel tricked)</em></li>
+        <li>The workers feel... when they see who 'Andy' really is.</li>
+        <li>It's good / bad for the company because...</li>
+        <li>I would / wouldn't like my boss to work undercover in my office because...</li>
+      </ul>
+    </div>
+
+    <!-- Vocabulary 3a: underline clothes words -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Vocabulary a: Look at two sentences from <em>Undercover Boss</em>. Underline the clothes words. What do they mean?</h4>
+      <p class="matching-instruction">Click the clothes words to underline them. Click an underlined word again to see its meaning.</p>
+      <div class="reading-text" id="underlineSentences" style="font-size:18px;"></div>
+      <div class="result-box" id="uwResult"></div>
+      <button class="reset-btn" onclick="resetUnderline()">🔄 Reset</button>
+    </div>
+
+    <!-- Vocabulary 3b: match words and pictures -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Vocabulary b: Match the words and pictures. Listen and check.</h4>
+
+      <div class="audio-player">
+        <button class="audio-play-btn" id="cmAudioPlayBtn" onclick="toggleCmAudio()">▶</button>
+        <div class="audio-info">
+          <strong>Track 3.58</strong> — Listen and check your answers
+        </div>
+      </div>
+
+      <p class="matching-instruction">Click a word, then click the matching picture.</p>
+      <div class="clothes-words" id="clothesWords"></div>
+      <div class="clothes-grid" id="clothesGrid"></div>
+
+      <div class="result-box" id="cmResult"></div>
+      <button class="reset-btn" onclick="resetClothesMatch()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 7: LISTENING (SANDRA) + PRONUNCIATION ==================== -->
+  <div class="screen" id="screen7">
+    <span class="section-label">Listening & Pronunciation</span>
+    <h1 class="section-title">Work experience at <em>fat face</em></h1>
+
+    <!-- 4 LISTENING -->
+    <div class="card">
+      <div class="sandra-photo">
+        <img src="assets/images/sandra.png" alt="Sandra in front of the fat face clothes shop"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+          <rect width="800" height="300" fill="#e8ecef"/>
+          <rect x="0" y="0" width="800" height="36" fill="#d3d9de"/>
+          <rect x="110" y="36" width="580" height="26" fill="#8a6a45"/>
+          <circle cx="352" cy="49" r="11" fill="#f7f3ea"/>
+          <path d="M347,49 q3,-6 5,0 q2,-6 5,0" stroke="#8a6a45" stroke-width="1.5" fill="none"/>
+          <text x="430" y="57" text-anchor="middle" font-family="cursive" font-size="24" fill="#ffffff" font-style="italic">fat face</text>
+          <rect x="130" y="70" width="210" height="160" fill="#cfe3ee"/>
+          <rect x="460" y="70" width="210" height="160" fill="#cfe3ee"/>
+          <rect x="350" y="70" width="100" height="160" fill="#5b6770"/>
+          <rect x="365" y="120" width="70" height="6" fill="#3d4750"/>
+          <rect x="372" y="126" width="8" height="22" fill="#e53e3e"/>
+          <rect x="384" y="126" width="8" height="22" fill="#4299e1"/>
+          <rect x="396" y="126" width="8" height="22" fill="#48bb78"/>
+          <rect x="408" y="126" width="8" height="22" fill="#ed8936"/>
+          <circle cx="180" cy="110" r="12" fill="#cbd5e0"/>
+          <rect x="166" y="122" width="28" height="46" fill="#e53e3e" rx="4"/>
+          <rect x="170" y="168" width="9" height="40" fill="#2c5282"/>
+          <rect x="182" y="168" width="9" height="40" fill="#2c5282"/>
+          <circle cx="250" cy="110" r="12" fill="#cbd5e0"/>
+          <rect x="236" y="122" width="28" height="46" fill="#48bb78" rx="4"/>
+          <rect x="240" y="168" width="9" height="40" fill="#2d3748"/>
+          <rect x="252" y="168" width="9" height="40" fill="#2d3748"/>
+          <circle cx="520" cy="110" r="12" fill="#cbd5e0"/>
+          <rect x="506" y="122" width="28" height="46" fill="#ed8936" rx="4"/>
+          <rect x="510" y="168" width="9" height="40" fill="#4a5568"/>
+          <rect x="522" y="168" width="9" height="40" fill="#4a5568"/>
+          <circle cx="600" cy="110" r="12" fill="#cbd5e0"/>
+          <rect x="586" y="122" width="28" height="46" fill="#9f7aea" rx="4"/>
+          <rect x="590" y="168" width="9" height="40" fill="#2c5282"/>
+          <rect x="602" y="168" width="9" height="40" fill="#2c5282"/>
+          <rect x="0" y="230" width="800" height="70" fill="#c8ccd0"/>
+          <circle cx="700" cy="180" r="14" fill="#a0aec0"/>
+          <rect x="684" y="194" width="32" height="52" fill="#4a5568" rx="5"/>
+          <rect x="712" y="216" width="16" height="20" fill="#dd6b20" rx="2"/>
+          <ellipse cx="150" cy="150" rx="58" ry="82" fill="#e7c568"/>
+          <circle cx="150" cy="140" r="40" fill="#fbd38d"/>
+          <path d="M110,132 q12,-46 40,-46 q28,0 40,46 q-22,-20 -40,-20 q-18,0 -40,20" fill="#e7c568"/>
+          <circle cx="136" cy="140" r="3.5" fill="#2d3748"/>
+          <circle cx="164" cy="140" r="3.5" fill="#2d3748"/>
+          <path d="M138,158 q12,10 24,0" stroke="#c05621" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M100,300 q6,-96 50,-96 q44,0 50,96 z" fill="#1a202c"/>
+        </svg>
+        <div class="sandra-caption">Sandra, 16, is working as a shop assistant at <em>fat face</em> in London.</div>
+      </div>
+
+      <h4 style="color:var(--primary); margin:16px 0 12px;">4a — Listen to Sandra. Is she positive or negative about her work experience?</h4>
+      <p style="font-size:15px; margin-bottom:12px;">In secondary schools in the UK, students aged 16–17 do two weeks' work experience. Listen to Sandra, who is working as a shop assistant at a clothes shop called <em>fat face</em> in London. Is she positive or negative about it?</p>
+
+      <div class="audio-player">
+        <button class="audio-play-btn" id="sandraAudioPlayBtn" onclick="toggleSandraAudio()">▶</button>
+        <div class="audio-info">
+          <strong>Track 3.59</strong> — Interview with Sandra
+        </div>
+      </div>
+
+      <div class="pn-buttons">
+        <button class="pn-btn" id="pnPos" onclick="clickPN('positive')">👍 Positive</button>
+        <button class="pn-btn" id="pnNeg" onclick="clickPN('negative')">👎 Negative</button>
+      </div>
+      <div class="result-box" id="pnResult"></div>
+      <button class="reset-btn" onclick="resetPN()">🔄 Reset</button>
+    </div>
+
+    <!-- 4b questions -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">4b — Listen again and answer the questions.</h4>
+      <div class="audio-player">
+        <button class="audio-play-btn" id="sandraAudioPlayBtn2" onclick="toggleSandraAudio()">▶</button>
+        <div class="audio-info"><strong>Track 3.59</strong> — Play the interview again</div>
+      </div>
+
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">1</span><span style="flex:1;">What kinds of clothes does <em>fat face</em> have?</span><button class="show-ans-btn" onclick="toggleLbAnswer(1, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA1">Clothes for men and women: informal clothes, trousers, T-shirts, sweaters, things like that.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">2</span><span style="flex:1;">What does Sandra do in the shop?</span><button class="show-ans-btn" onclick="toggleLbAnswer(2, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA2">She helps the customers to find the clothes that they're looking for.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">3</span><span style="flex:1;">What does Sandra like about the job?</span><button class="show-ans-btn" onclick="toggleLbAnswer(3, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA3">She loves it: the people are really nice to her and she's making a lot of new friends.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">4</span><span style="flex:1;">What doesn't she like?</span><button class="show-ans-btn" onclick="toggleLbAnswer(4, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA4">They can't sit down — they're standing up all the time, so that's quite hard.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">5</span><span style="flex:1;">What can Sandra do when she finishes her work experience?</span><button class="show-ans-btn" onclick="toggleLbAnswer(5, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA5">She can work in the shop on Saturdays.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">6</span><span style="flex:1;">Does she wear a uniform in the shop?</span><button class="show-ans-btn" onclick="toggleLbAnswer(6, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA6">No, they don't. They wear clothes from the shop.</div>
+      </div>
+      <div class="lb-item">
+        <div class="lb-q"><span class="tf-num">7</span><span style="flex:1;">Where are the clothes she is wearing today from?</span><button class="show-ans-btn" onclick="toggleLbAnswer(7, this)">Show answer</button></div>
+        <div class="lb-a" id="lbA7">They're from <em>fat face</em> — the shop where she's working. ("Yes, they are!")</div>
+      </div>
+    </div>
+
+    <!-- 4c discussion -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">4c — Do you think it's a good idea for young people to do work experience?</h4>
+      <ul class="speaking-prompts">
+        <li>I think work experience is a good idea because...</li>
+        <li>In my opinion, it's a bad idea because...</li>
+        <li>When I was 16, I worked / I would like to work as...</li>
+        <li>Work experience helps you to... (choose a job, make friends, understand real work)</li>
+      </ul>
+    </div>
+
+    <!-- Listening script -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">🎧 Listening script — Track 3.59</h4>
+      <p style="font-size:14px; color:var(--text-light); margin-bottom:8px;">For checking in class. Click to show or hide the script.</p>
+      <button class="show-full-btn" style="margin:0 0 4px;" onclick="toggleScript(this)">Show script</button>
+      <div class="script-box" id="scriptBox">
+        <div class="script-line"><span class="script-speaker">Interviewer</span> Hi, Sandra. Tell us a bit about your experience. Where are you working?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> I'm working in a clothes shop called <em>fat face</em>.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> What kind of clothes does <em>fat face</em> have?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Er, well, clothes for men and women, informal clothes, trousers, T-shirts, sweaters, things like that.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> What do you do every day?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Well, er, I help the customers to find the clothes that they're looking for. It's a big shop and it has a lot of things. People sometimes can't see the things that they want.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> Do you like working there?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Yes, I love it. The people are really nice to me. I'm making a lot of new friends.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> Is there anything you don't like?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Well, we can't sit down, we're standing up all the time. So that's quite hard.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> But in general you're happy?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Oh yes. And when my two weeks finish they say I can work here on Saturdays! That's great for me. I really like working in a clothes shop.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> Do you wear a uniform?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> No, we don't. We wear clothes from the shop.</div>
+        <div class="script-line"><span class="script-speaker">Interviewer</span> Are the clothes that you're wearing today from <em>fat face</em>?</div>
+        <div class="script-line"><span class="script-speaker">Sandra</span> Yes, they are!</div>
+      </div>
+    </div>
+
+    <!-- 5 PRONUNCIATION -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:4px;">5 PRONUNCIATION & SPEAKING</h4>
+      <div class="pron-sounds-row">/ɜː/, /iː/, /e/, and /eə/</div>
+      <p style="font-size:15px; margin-bottom:12px;"><strong>5a — Track 3.60:</strong> Listen and repeat the words and sounds. Click a word (or the sound box) to hear it again.</p>
+
+      <div class="audio-player">
+        <button class="audio-play-btn" id="pronWordsPlayBtn" onclick="togglePronWordsAudio()">▶</button>
+        <div class="audio-info"><strong>Track 3.60</strong> — The words and sounds</div>
+      </div>
+
+      <div class="pron-grid">
+        <div class="pron-cell">
+          <div class="pron-symbol" onclick="speakText('bird')">
+            <div class="pron-ipa">/ɜː/</div>
+            <div class="pron-key">bird</div>
+          </div>
+          <div class="pron-words">
+            <span class="pron-word" onclick="speakText('shirt')">sh<span class="ph">ir</span>t</span>
+            <span class="pron-word" onclick="speakText('skirt')">sk<span class="ph">ir</span>t</span>
+            <span class="pron-word" onclick="speakText('T-shirt')">T-sh<span class="ph">ir</span>t</span>
+            <span class="pron-word" onclick="speakText('serve')">s<span class="ph">er</span>ve</span>
+            <span class="pron-word" onclick="speakText('work')">w<span class="ph">or</span>k</span>
+          </div>
+        </div>
+        <div class="pron-cell">
+          <div class="pron-symbol" onclick="speakText('egg')">
+            <div class="pron-ipa">/e/</div>
+            <div class="pron-key">egg</div>
+          </div>
+          <div class="pron-words">
+            <span class="pron-word" onclick="speakText('dress')">dr<span class="ph">e</span>ss</span>
+            <span class="pron-word" onclick="speakText('sweater')">sw<span class="ph">ea</span>ter</span>
+            <span class="pron-word" onclick="speakText('breakfast')">br<span class="ph">ea</span>kfast</span>
+          </div>
+        </div>
+        <div class="pron-cell">
+          <div class="pron-symbol" onclick="speakText('tree')">
+            <div class="pron-ipa">/iː/</div>
+            <div class="pron-key">tree</div>
+          </div>
+          <div class="pron-words">
+            <span class="pron-word" onclick="speakText('jeans')">j<span class="ph">ea</span>ns</span>
+            <span class="pron-word" onclick="speakText('clean')">cl<span class="ph">ea</span>n</span>
+            <span class="pron-word" onclick="speakText('meeting')">m<span class="ph">ee</span>ting</span>
+            <span class="pron-word" onclick="speakText('week')">w<span class="ph">ee</span>k</span>
+          </div>
+        </div>
+        <div class="pron-cell">
+          <div class="pron-symbol" onclick="speakText('chair')">
+            <div class="pron-ipa">/eə/</div>
+            <div class="pron-key">chair</div>
+          </div>
+          <div class="pron-words">
+            <span class="pron-word" onclick="speakText('wear')">w<span class="ph">ear</span></span>
+            <span class="pron-word" onclick="speakText('repair')">rep<span class="ph">air</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5b sentences -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">5b — Listen. Practise the sentences.</h4>
+      <div class="audio-player">
+        <button class="audio-play-btn" id="pronSentPlayBtn" onclick="togglePronSentAudio()">▶</button>
+        <div class="audio-info"><strong>Track 3.61</strong> — The sentences</div>
+      </div>
+
+      <div class="pron-sentence">
+        <button class="say-btn" onclick="speakText(&quot;She's wearing a shirt and a skirt.&quot;)" title="Listen">🔊</button>
+        <span>She's w<span class="ph">ear</span>ing a sh<span class="ph">ir</span>t and a sk<span class="ph">ir</span>t.</span>
+      </div>
+      <div class="pron-sentence">
+        <button class="say-btn" onclick="speakText('Please leave my jeans on the chair over there.')" title="Listen">🔊</button>
+        <span>Pl<span class="ph">ea</span>se l<span class="ph">ea</span>ve my j<span class="ph">ea</span>ns on the ch<span class="ph">air</span> over th<span class="ph">ere</span>.</span>
+      </div>
+      <div class="pron-sentence">
+        <button class="say-btn" onclick="speakText('I have bread and an egg for breakfast.')" title="Listen">🔊</button>
+        <span>I have br<span class="ph">ea</span>d and an <span class="ph">e</span>gg for br<span class="ph">ea</span>kfast.</span>
+      </div>
+    </div>
+
+    <!-- 5c & 5d speaking -->
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">5c — Talk to a partner.</h4>
+      <ul class="speaking-prompts">
+        <li>1. What are you wearing today?</li>
+        <li>2. What colours do you like wearing?</li>
+        <li>3. What clothes do you usually wear…?
+          <div class="sub-grid">
+            <span><strong>a</strong> in the summer</span>
+            <span><strong>c</strong> to work / school</span>
+            <span><strong>b</strong> in the winter</span>
+            <span><strong>d</strong> for a party</span>
+          </div>
+        </li>
+      </ul>
+      <h4 style="color:var(--primary); margin:16px 0 12px;">5d — Say what other people in the class are wearing. What do they usually wear?</h4>
+      <ul class="speaking-prompts">
+        <li>Look! Maria is wearing a blue sweater and black jeans today.</li>
+        <li>She usually wears sportswear, but today she's wearing a dress.</li>
+        <li>He isn't wearing a jacket — he's wearing a hoodie.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 8: INTEGRATED READING ==================== -->
+  <div class="screen" id="screen8">
+    <span class="section-label">Reading & Vocabulary</span>
+    <h1 class="section-title">A Day Undercover</h1>
+
+    <p style="font-size:16px; margin-bottom:20px;">Read the text. Then complete the sentences below with the correct words.</p>
+
+    <div class="reading-text">
+      <p>My name is Sarah and I am an <span class="clickable-word" data-word="undercover">undercover</span> agent. Every day, I <span class="clickable-word" data-word="wear">wear</span> different clothes because I <span class="clickable-word" data-word="works">work</span> in different places.</p>
+      <p>On Mondays, I <span class="clickable-word" data-word="wear">wear</span> a <span class="clickable-word" data-word="uniform">uniform</span> because I work in a hospital. I usually wear white <span class="clickable-word" data-word="shoes">shoes</span> and a white <span class="clickable-word" data-word="coat">coat</span>. But today is Tuesday and I <span class="clickable-word" data-word="wearing">am wearing</span> a <span class="clickable-word" data-word="suit">suit</span> and <span class="clickable-word" data-word="tie">tie</span> because I'm working in a bank.</p>
+      <p>Right now, I <span class="clickable-word" data-word="sitting">am sitting</span> at a desk. I <span class="clickable-word" data-word="wearing">am wearing</span> <span class="clickable-word" data-word="glasses">glasses</span> because I need a <span class="clickable-word" data-word="disguise">disguise</span>. My <span class="clickable-word" data-word="colleague">colleague</span> Tom is outside. He <span class="clickable-word" data-word="wearing">is wearing</span> <span class="clickable-word" data-word="dark">dark</span> clothes and a <span class="clickable-word" data-word="hat">hat</span>. He looks like a normal person!</p>
+    </div>
+
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:16px;">Complete the sentences:</h4>
+      <div id="readingQuestions"></div>
+      <div class="result-box" id="readingResult"></div>
+      <button class="reset-btn" onclick="resetReading()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 9: GUIDED SPEAKING ==================== -->
+  <div class="screen" id="screen9">
+    <span class="section-label">Speaking</span>
+    <h1 class="section-title">Describe the agent</h1>
+
+    <p style="font-size:16px; margin-bottom:20px;">Look at the pictures. With your teacher, describe what the agent usually wears and what he is wearing today.</p>
+
+    <div class="split-image">
+      <div class="split-image-item">
+        <img src="assets/images/athome.png" alt="Man at home in casual clothes">
+        <div class="split-image-label">USUALLY (at home)</div>
+      </div>
+      <div class="split-image-item">
+        <img src="assets/images/atwork.png" alt="Man at work in a suit">
+        <div class="split-image-label">TODAY (undercover at work)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Talk about the agent:</h4>
+      <ul class="speaking-prompts">
+        <li>What does he usually wear at home? → <em>"He usually wears a cream sweater and grey trousers..."</em></li>
+        <li>What is he wearing today? → <em>"Today he is wearing a dark suit, a white shirt and a purple tie..."</em></li>
+        <li>Does he usually wear a suit? → <em>"No, he doesn't usually wear a suit..."</em></li>
+        <li>Is he wearing glasses today? → <em>"No, he isn't wearing glasses..."</em></li>
+        <li>Why is he wearing different clothes? → <em>"Because he is working undercover..."</em></li>
+      </ul>
+    </div>
+
+    <div class="useful-lang-box">
+      <h4>Speaking support</h4>
+      <ul>
+        <li>He usually wears...</li>
+        <li>But today he's wearing...</li>
+        <li>He doesn't usually wear...</li>
+        <li>He isn't wearing... today.</li>
+        <li>Because he's working undercover.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 10: FREER SPEAKING ==================== -->
+  <div class="screen" id="screen10">
+    <span class="section-label">Freer Speaking</span>
+    <h1 class="section-title">Your undercover mission</h1>
+
+    <p style="font-size:16px; margin-bottom:20px;">Imagine you are an <span class="clickable-word" data-word="undercover">undercover</span> agent. Choose a <span class="clickable-word" data-word="disguise">disguise</span> and describe your mission to your teacher!</p>
+
+    <div class="card" style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); color: white;">
+      <h4 style="color: #f6e05e; margin-bottom:12px;">🕵️ Your Mission Brief</h4>
+      <p style="font-size:15px; line-height:1.7;">Choose one situation and prepare to talk about it:</p>
+      <div style="margin-top:12px;">
+        <p style="margin-bottom:8px;"><strong>A)</strong> You are working undercover in a <span class="clickable-word" data-word="secret">secret</span> office. What are you wearing? What do you usually wear?</p>
+        <p style="margin-bottom:8px;"><strong>B)</strong> You are working undercover as a chef (like in picture 3). What are you wearing now? What do you usually wear?</p>
+        <p><strong>C)</strong> You are working undercover as a hotel worker (like in picture 3). Describe your clothes!</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Prepare your answers:</h4>
+      <ul class="speaking-prompts">
+        <li>Where are you working undercover? → <em>"I'm working undercover in/at..."</em></li>
+        <li>What are you wearing right now? → <em>"I'm wearing a/an..."</em></li>
+        <li>What are you NOT wearing? → <em>"I'm not wearing..."</em></li>
+        <li>What do you usually wear? → <em>"I usually wear..."</em></li>
+        <li>Why are you wearing this disguise? → <em>"Because I need to look like..."</em></li>
+        <li>Is your <span class="clickable-word" data-word="colleague">colleague</span> with you? What is he/she wearing? → <em>"My colleague is wearing..."</em></li>
+      </ul>
+    </div>
+
+    <div class="useful-lang-box">
+      <h4>Useful language</h4>
+      <ul>
+        <li>I'm working undercover as a...</li>
+        <li>Right now I'm wearing...</li>
+        <li>I usually wear... but today...</li>
+        <li>I need a disguise because...</li>
+        <li>My colleague is wearing...</li>
+        <li>I'm not wearing... because...</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 11: REVIEW + HOMEWORK ==================== -->
+  <div class="screen" id="screen11">
+    <span class="section-label">Review & Homework</span>
+    <h1 class="section-title">What have you learned?</h1>
+
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:16px;">Quick Review — Complete the sentences:</h4>
+      <div id="reviewQuestions"></div>
+      <div class="result-box" id="reviewResult"></div>
+      <button class="reset-btn" onclick="resetReview()"> Reset</button>
+    </div>
+
+    <div class="card">
+      <h4 style="color:var(--primary); margin-bottom:12px;">Can you remember?</h4>
+      <p style="font-size:15px; margin-bottom:8px;">Think about these questions and discuss with your teacher:</p>
+      <ul style="font-size:15px; line-height:2; padding-left:20px;">
+        <li>Which new <span class="clickable-word" data-word="clothes">clothes</span> words can you remember?</li>
+        <li>When do we use <strong>Present Simple</strong>?</li>
+        <li>When do we use <strong>Present Continuous</strong>?</li>
+        <li>What can you talk about now that you couldn't before?</li>
+      </ul>
+    </div>
+
+    <div class="homework-section">
+      <h4>📚 Homework</h4>
+      
+      <p style="font-size:15px; margin-bottom:12px;"><strong>Task 1:</strong> Complete the sentences with Present Simple or Present Continuous:</p>
+      <ol style="font-size:15px; line-height:2; padding-left:20px; margin-bottom:16px;">
+        <li>He ________ (wear) a suit every day.</li>
+        <li>Right now, she ________ (wear) a disguise.</li>
+        <li>They ________ (not wear) uniforms at this company.</li>
+        <li>Look! The agent ________ (put) on a hat.</li>
+        <li>I usually ________ (wear) jeans, but today I ________ (wear) a coat and scarf.</li>
+      </ol>
+
+      <p style="font-size:15px; margin-bottom:12px;"><strong>Task 2:</strong> Write 6–8 sentences about yourself:</p>
+      <ul style="font-size:14px; line-height:1.8; padding-left:20px; margin-bottom:12px; color:var(--text-light);">
+        <li>What clothes do you usually wear to work / study?</li>
+        <li>What are you wearing right now?</li>
+        <li>What is your friend/family member wearing at the moment? (guess!)</li>
+      </ul>
+
+      <p style="font-size:14px; font-weight:600; margin-bottom:8px;">Checklist:</p>
+      <ul class="checklist">
+        <li>Use at least 5 clothes words from the lesson</li>
+        <li>Use Present Simple at least 3 times</li>
+        <li>Use Present Continuous at least 3 times</li>
+        <li>Check your spelling</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Vocabulary Modal -->
+<div class="vocab-modal-overlay" id="vocabModal">
+  <div class="vocab-modal">
+    <div class="vocab-modal-header">
+      <h3 id="modalWord"></h3>
+      <button class="vocab-modal-close" onclick="closeVocabModal()">×</button>
+    </div>
+    <div class="vocab-modal-body">
+      <div class="vocab-modal-image" id="modalImage"></div>
+      <div class="vocab-ipa" id="modalIpa"></div>
+      <div class="vocab-pos" id="modalPos"></div>
+      <button class="vocab-audio-btn" onclick="playAudio()">🔊 <span>Listen</span></button>
+      <div class="vocab-definition" id="modalDefinition"></div>
+      <div class="vocab-examples" id="modalExamples"></div>
+      <button class="vocab-translation-btn" id="transBtn" onclick="toggleTranslation()">View translation</button>
+      <div class="vocab-translation" id="modalTranslation"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== VOCABULARY DATA ====================
+const vocabData = {
+  clothes: { ipa: "/kləʊðz/", pos: "noun (plural)", definition: "Things that you wear, like shirts, trousers, dresses and shoes.", examples: ["What clothes do you usually wear to work?", "She's buying some new clothes."], translation: "одежда", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="30" y="20" width="40" height="50" fill="#4299e1" rx="4"/><rect x="80" y="25" width="35" height="55" fill="#48bb78" rx="4"/><rect x="125" y="20" width="45" height="50" fill="#ed8936" rx="4"/></svg>` },
+  suit: { ipa: "/suːt/", pos: "noun", definition: "A set of clothes: a jacket and trousers made from the same material. People wear suits to work.", examples: ["He is wearing a dark suit today.", "She bought a new suit for the interview."], translation: "костюм", imgPath: "assets/images/clothes/suit.png" },
+  tie: { ipa: "/taɪ/", pos: "noun", definition: "A long, thin piece of cloth that men wear around their neck with a shirt and suit.", examples: ["He's wearing a purple tie.", "Do you wear a tie to work?"], translation: "галстук", imgPath: "assets/images/tie.png" },
+  uniform: { ipa: "/ˈjuːnɪfɔm/", pos: "noun", definition: "Special clothes that people wear for their job. Everyone in the group wears the same uniform.", examples: ["The chef is wearing a white uniform.", "Students at this school wear a uniform."], translation: "униформа", imgPath: "assets/images/uniform.png" },
+  jacket: { ipa: "/ˈdækɪt/", pos: "noun", definition: "A short coat. You wear it over other clothes when it is cold.", examples: ["Put on your jacket — it's cold outside.", "She's wearing a leather jacket."], translation: "куртка, пиджак", imgPath: "assets/images/clothes/jacket.png" },
+  shirt: { ipa: "/ʃːt/", pos: "noun", definition: "A piece of clothing for the top part of your body. It has a collar, buttons and sleeves.", examples: ["He's wearing a white shirt.", "I need to iron my shirt."], translation: "рубашка", imgPath: "assets/images/clothes/shirt.png" },
+  trousers: { ipa: "/ˈtrazəz/", pos: "noun (plural)", definition: "A piece of clothing that covers each leg separately.", examples: ["He's wearing black trousers.", "These trousers are too long."], translation: "брюки", imgPath: "assets/images/clothes/trousers.png" },
+  boots: { ipa: "/buːts/", pos: "noun (plural)", definition: "Strong shoes that cover your feet and part of your leg.", examples: ["She's wearing brown boots.", "I need new boots for winter."], translation: "ботинки, сапоги", imgPath: "assets/images/boots.png" },
+  hat: { ipa: "/hæt/", pos: "noun", definition: "A thing that you wear on your head.", examples: ["He's wearing a black hat.", "She always wears a hat in summer."], translation: "шляпа", imgPath: "assets/images/hat.png" },
+  glasses: { ipa: "/ˈɡlɑːsɪz/", pos: "noun (plural)", definition: "Two pieces of glass in a frame. You wear them on your nose and ears to help you see better.", examples: ["She's wearing glasses.", "I need new glasses."], translation: "очки", imgPath: "assets/images/glasses.png" },
+  scarf: { ipa: "/skɑːf/", pos: "noun", definition: "A piece of cloth that you wear around your neck to keep warm.", examples: ["She's wearing a warm scarf.", "He has a red scarf around his neck."], translation: "шарф", imgPath: "assets/images/scarf.png" },
+  gloves: { ipa: "/ɡlʌvz/", pos: "noun (plural)", definition: "Pieces of clothing that you wear on your hands to keep them warm.", examples: ["Put on your gloves — it's cold!", "She's wearing black leather gloves."], translation: "перчатки", imgPath: "assets/images/gloves.png" },
+  coat: { ipa: "/kəʊt/", pos: "noun", definition: "A piece of clothing that you wear over other clothes when it is cold. It is longer than a jacket.", examples: ["Put on your coat — it's raining!", "She's wearing a long dark coat."], translation: "пальто", imgPath: "assets/images/coat.png" },
+  disguise: { ipa: "/dɪsɡaɪz/", pos: "noun / verb", definition: "Clothes or a different appearance that you wear so that people do not recognise you.", examples: ["The agent is wearing a disguise.", "She disguised herself as a tourist."], translation: "маскировка", imgPath: "assets/images/disguise.png" },
+  badge: { ipa: "/bædʒ/", pos: "noun", definition: "A small piece of metal or cloth with a picture or words on it. People wear it to show their job.", examples: ["The police officer is wearing a badge.", "She has a name badge."], translation: "значок, бейдж", imgPath: "assets/images/badge.png" },
+  wearing: { ipa: "/ˈweərɪŋ/", pos: "verb (present continuous of 'wear')", definition: "Having clothes, glasses, etc. on your body right now.", examples: ["What are you wearing today?", "She's wearing a blue dress."], translation: "носит (на себе) сейчас", imgPath: "assets/images/wearing.png" },
+  undercover: { ipa: "/ˌʌndəˈkʌvə(r)/", pos: "adjective / adverb", definition: "Working secretly, so that people do not know your real job or identity.", examples: ["He's an undercover agent.", "The police are working undercover."], translation: "тайный, под прикрытием", imgPath: "assets/images/undercover.png" },
+  "happening now": { ipa: "/ˈhæpənɪŋ naʊ/", pos: "phrase", definition: "Taking place at this moment, at the present time.", examples: ["What's happening now?", "The action is happening now."], translation: "происходящий сейчас", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="100" cy="60" r="35" fill="none" stroke="#4299e1" stroke-width="4"/><line x1="100" y1="60" x2="100" y2="35" stroke="#2d3748" stroke-width="3"/><line x1="100" y1="60" x2="120" y2="60" stroke="#e53e3e" stroke-width="2"/><circle cx="100" cy="60" r="3" fill="#2d3748"/></svg>` },
+  routines: { ipa: "/ruːˈtiːnz/", pos: "noun (plural)", definition: "Things that you do regularly, usually in the same way and at the same time.", examples: ["My morning routine includes coffee and exercise."], translation: "рутина, привычный порядок", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="100" cy="60" r="40" fill="none" stroke="#48bb78" stroke-width="3" stroke-dasharray="8,4"/></svg>` },
+  habits: { ipa: "/ˈhæbɪts/", pos: "noun (plural)", definition: "Things that you do often and almost without thinking.", examples: ["Eating fruit every day is a good habit."], translation: "привычки", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="100" cy="60" r="30" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/></svg>` },
+  facts: { ipa: "/fækts/", pos: "noun (plural)", definition: "Things that are true and you can prove.", examples: ["It's a fact that water boils at 100°C."], translation: "факты", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="50" y="25" width="100" height="70" fill="white" stroke="#cbd5e0" stroke-width="2" rx="4"/></svg>` },
+  temporary: { ipa: "/ˈtemprəri/", pos: "adjective", definition: "Not permanent; lasting for a short time only.", examples: ["This is a temporary job.", "He's wearing a temporary disguise."], translation: "временный", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="40" y="45" width="120" height="30" fill="#fefcbf" stroke="#d69e2e" stroke-width="2" rx="4"/><text x="100" y="65" text-anchor="middle" font-size="14" fill="#744210" font-weight="600">TEMPORARY</text></svg>` },
+  difficult: { ipa: "/ˈdɪfɪkəlt/", pos: "adjective", definition: "Not easy; needing a lot of effort or skill.", examples: ["This question is difficult.", "It's difficult to learn new words."], translation: "трудный, сложный", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><path d="M40,90 L80,50 L110,70 L140,30 L170,45" fill="none" stroke="#e53e3e" stroke-width="3"/><circle cx="140" cy="30" r="5" fill="#e53e3e"/></svg>` },
+  works: { ipa: "/wɜːks/", pos: "verb (3rd person singular of 'work')", definition: "Does a job; does activities for your job.", examples: ["She works in a hospital.", "He works from home on Fridays."], translation: "работает", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="50" y="50" width="100" height="45" fill="#744210" rx="4"/></svg>` },
+  wears: { ipa: "/weəz/", pos: "verb (3rd person singular of 'wear')", definition: "Has clothes on his/her body (as a habit or routine).", examples: ["She wears glasses every day.", "He wears a uniform to work."], translation: "носит (регулярно)", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="100" cy="35" r="18" fill="#fbd38d"/><rect x="78" y="53" width="44" height="45" fill="#4299e1" rx="6"/></svg>` },
+  secret: { ipa: "/ˈsiːkrət/", pos: "adjective / noun", definition: "Not known by other people; private.", examples: ["He has a secret mission.", "Don't tell anyone — it's a secret!"], translation: "секретный, тайна", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="65" y="35" width="70" height="55" fill="#744210" rx="4"/><circle cx="100" cy="60" r="10" fill="#f6e05e"/></svg>` },
+  manager: { ipa: "/ˈmænɪdʒə(r)/", pos: "noun", definition: "A person who controls or directs the work of other people in a company.", examples: ["She's the manager of a big company."], translation: "менеджер, управляющий", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="100" cy="35" r="18" fill="#fbd38d"/><rect x="78" y="53" width="44" height="40" fill="#1a202c" rx="6"/></svg>` },
+  colleague: { ipa: "/ˈkɒliːɡ/", pos: "noun", definition: "A person who you work with, especially in a professional job.", examples: ["My colleague is very friendly.", "She's having lunch with her colleagues."], translation: "коллега", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><circle cx="75" cy="45" r="15" fill="#fbd38d"/><rect x="60" y="60" width="30" height="30" fill="#4299e1" rx="4"/><circle cx="125" cy="45" r="15" fill="#fbd38d"/><rect x="110" y="60" width="30" height="30" fill="#48bb78" rx="4"/></svg>` },
+  dark: { ipa: "/dɑːk/", pos: "adjective", definition: "With little or no light; or a colour that is not light.", examples: ["She's wearing dark glasses.", "It's getting dark outside."], translation: "тёмный", svg: `<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#f0f4f8" rx="8"/><rect x="30" y="30" width="40" height="60" fill="#1a202c" rx="4"/><rect x="80" y="30" width="40" height="60" fill="#4a5568" rx="4"/><rect x="130" y="30" width="40" height="60" fill="#a0aec0" rx="4"/></svg>` },
+  jeans: { ipa: "/dʒiːnz/", pos: "noun (plural)", definition: "Trousers made of denim (strong cotton cloth), usually blue.", examples: ["He's wearing jeans and a T-shirt today.", "These jeans are too tight."], translation: "джинсы", imgPath: "assets/images/clothes/jeans.png" },
+  sweater: { ipa: "/ˈswetə(r)/", pos: "noun", definition: "A warm piece of clothing for the top part of your body, made of wool or cotton.", examples: ["He's wearing a cream sweater at home.", "Put on a sweater — it's cold."], translation: "свитер, кофта", imgPath: "assets/images/clothes/sweater.png" },
+  skirt: { ipa: "/skɜːt/", pos: "noun", definition: "A piece of clothing for a woman or girl that hangs from the waist.", examples: ["She's wearing a black skirt and a white shirt.", "That skirt is very long."], translation: "юбка", imgPath: "assets/images/clothes/skirt.png" },
+  dress: { ipa: "/dres/", pos: "noun", definition: "A piece of clothing for a woman or girl with a top part and a skirt part together.", examples: ["She's wearing a beautiful pink dress.", "I wear a dress to work in summer."], translation: "платье", imgPath: "assets/images/clothes/dress.png" },
+  shoes: { ipa: "/ʃuːz/", pos: "noun (plural)", definition: "Things that you wear on your feet.", examples: ["She's wearing green shoes.", "I need new shoes for work."], translation: "туфли, ботинки", imgPath: "assets/images/clothes/shoes.png" },
+  "T-shirt": { ipa: "/ˈtiː ʃɜt/", pos: "noun", definition: "A light shirt without a collar or buttons, worn in warm weather or for sport.", examples: ["Today he's wearing jeans and a T-shirt.", "A white T-shirt and black trousers."], translation: "футболка", imgPath: "assets/images/clothes/tshirt.png" },
+  kitchen: { ipa: "/ˈkɪtʃɪn/", pos: "noun", definition: "A room where food is cooked and prepared.", examples: ["Today, he's working in the kitchen.", "The people in the kitchen work 80 hours a week."], translation: "кухня" },
+  oven: { ipa: "/ˈʌvn/", pos: "noun", definition: "A piece of equipment like a box with a door, used for cooking or heating food.", examples: ["One of the ovens isn't working.", "Put the pizza in the oven."], translation: "духовка, печь" },
+  bedroom: { ipa: "/ˈbedruːm/", pos: "noun", definition: "A room for sleeping in.", examples: ["Today he's working in the bedrooms.", "The hotel has 40 bedrooms."], translation: "спальня, номер" },
+  clean: { ipa: "/kliːn/", pos: "verb", definition: "To remove dirt from something; to make something clean.", examples: ["David is cleaning rooms.", "The workers clean a room in 15 minutes."], translation: "убирать, чистить" },
+  repair: { ipa: "/rɪˈpeə(r)/", pos: "verb", definition: "To fix something that is broken or damaged.", examples: ["The workers are repairing things in the rooms.", "One of the ovens isn't working — it needs repairing."], translation: "ремонтировать, чинить" },
+  angry: { ipa: "/ˈæŋɡri/", pos: "adjective", definition: "Feeling that you want to shout at someone because they have behaved badly.", examples: ["David is angry, but he can't say anything.", "Don't be angry with me!"], translation: "сердитый, злой" },
+  serving: { ipa: "/ˈsɜːvɪŋ/", pos: "verb (present continuous of 'serve')", definition: "Giving someone food or drink, for example in a restaurant.", examples: ["He's serving breakfast.", "The waiters are serving lunch now."], translation: "подавать (еду, напитки)" },
+  "very hard": { ipa: "/ˈveri hɑːd/", pos: "adverb / phrase", definition: "With a lot of effort or energy.", examples: ["The waiters and waitresses always work very hard.", "David is working very hard."], translation: "очень усердно, изо всех сил" },
+  surprised: { ipa: "/səˈpraɪzd/", pos: "adjective", definition: "Feeling strange because something unexpected happens.", examples: ["The workers are very surprised.", "I'm surprised to see you here!"], translation: "удивлённый" },
+  gives: { ipa: "/ɡɪvz/", pos: "verb (3rd person singular of 'give')", definition: "Hands something to someone so that they have it.", examples: ["He gives the good workers more money.", "She gives me my coffee every morning."], translation: "давать, выдавать" },
+  "work experience": { ipa: "/ˈwɜːk ɪkˌspɪəriəns/", pos: "noun (uncountable)", definition: "Time that young students spend working in a company to learn about a job.", examples: ["Sandra is doing two weeks' work experience.", "I did my work experience in a hospital."], translation: "производственная практика (для школьников)" },
+  "shop assistant": { ipa: "/ˈʃɒp əˌsɪstənt/", pos: "noun", definition: "A person who works in a shop and helps customers.", examples: ["Sandra is working as a shop assistant.", "The shop assistant showed me some shoes."], translation: "продавец-консультант" }
+};
+
+// ==================== NAVIGATION ====================
+let currentScreen = 1;
+const totalScreens = 11;
+
+function initProgressDots() {
+  const container = document.getElementById('progressDots');
+  container.innerHTML = '';
+  for (let i = 1; i <= totalScreens; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.screen = i;
+    container.appendChild(dot);
+  }
+}
+
+function updateNavigation() {
+  document.getElementById('screenLabel').textContent = `Screen ${currentScreen} of ${totalScreens}`;
+  document.getElementById('prevBtn').disabled = currentScreen === 1;
+  document.getElementById('nextBtn').disabled = currentScreen === totalScreens;
+  document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
+    dot.classList.remove('active', 'completed');
+    if (idx + 1 === currentScreen) dot.classList.add('active');
+    else if (idx + 1 < currentScreen) dot.classList.add('completed');
+  });
+}
+
+function showScreen(num) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen${num}`).classList.add('active');
+  currentScreen = num;
+  updateNavigation();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextScreen() { if (currentScreen < totalScreens) showScreen(currentScreen + 1); }
+function prevScreen() { if (currentScreen > 1) showScreen(currentScreen - 1); }
+
+// ==================== REFERENCE SECTIONS ====================
+let activeRef = null;
+
+function toggleRef(type) {
+  const vocabCard = document.getElementById('vocabCard');
+  const grammarCard = document.getElementById('grammarCard');
+  const vocabSection = document.getElementById('vocabSection');
+  const grammarSection = document.getElementById('grammarSection');
+
+  if (type === 'vocab') {
+    if (activeRef === 'vocab') return;
+    vocabCard.classList.add('active');
+    grammarCard.classList.remove('active');
+    vocabSection.classList.add('visible');
+    grammarSection.classList.remove('visible');
+    activeRef = 'vocab';
+  } else {
+    if (activeRef === 'grammar') return;
+    grammarCard.classList.add('active');
+    vocabCard.classList.remove('active');
+    grammarSection.classList.add('visible');
+    vocabSection.classList.remove('visible');
+    activeRef = 'grammar';
+  }
+}
+
+// ==================== VOCABULARY LIST ====================
+const vocabList = ['suit', 'tie', 'uniform', 'jacket', 'shirt', 'trousers', 'boots', 'hat', 'glasses', 'scarf', 'gloves', 'coat', 'disguise', 'badge'];
+let vocabExpanded = false;
+
+function buildVocabGrid() {
+  const grid = document.getElementById('vocabGrid');
+  grid.innerHTML = '';
+  vocabList.forEach(word => {
+    const item = document.createElement('div');
+    item.className = 'vocab-item';
+    item.textContent = word;
+    item.onclick = () => openVocabModal(word);
+    grid.appendChild(item);
+  });
+}
+
+function toggleVocabList() {
+  const preview = document.getElementById('vocabPreview');
+  const btn = document.getElementById('showFullBtn');
+  vocabExpanded = !vocabExpanded;
+  if (vocabExpanded) {
+    preview.classList.remove('collapsed');
+    btn.textContent = 'Show less';
+  } else {
+    preview.classList.add('collapsed');
+    btn.textContent = 'Show full list';
+  }
+}
+
+// ==================== VOCABULARY MODAL ====================
+let currentModalWord = '';
+
+function openVocabModal(word) {
+  const data = vocabData[word];
+  if (!data) return;
+  currentModalWord = word;
+  document.getElementById('modalWord').textContent = word;
+  document.getElementById('modalIpa').textContent = data.ipa;
+  document.getElementById('modalPos').textContent = data.pos;
+  document.getElementById('modalDefinition').textContent = data.definition;
+  const examplesDiv = document.getElementById('modalExamples');
+  examplesDiv.innerHTML = '';
+  data.examples.forEach(ex => {
+    const p = document.createElement('p');
+    p.textContent = ex;
+    examplesDiv.appendChild(p);
+  });
+  const imageDiv = document.getElementById('modalImage');
+  if (data.imgPath) {
+    imageDiv.style.display = 'flex';
+    imageDiv.innerHTML = `<img src="${data.imgPath}" alt="${word}" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;text-align:center;color:#718096\\'>Image: ${word}</div>'">`;
+  } else if (data.svg) {
+    imageDiv.style.display = 'flex';
+    imageDiv.innerHTML = data.svg;
+  } else {
+    imageDiv.style.display = 'none';
+    imageDiv.innerHTML = '';
+  }
+  document.getElementById('modalTranslation').textContent = data.translation;
+  document.getElementById('modalTranslation').classList.remove('visible');
+  document.getElementById('transBtn').textContent = 'View translation';
+  document.getElementById('vocabModal').classList.add('visible');
+}
+
+function closeVocabModal() { document.getElementById('vocabModal').classList.remove('visible'); }
+
+function toggleTranslation() {
+  const trans = document.getElementById('modalTranslation');
+  const btn = document.getElementById('transBtn');
+  if (trans.classList.contains('visible')) {
+    trans.classList.remove('visible');
+    btn.textContent = 'View translation';
+  } else {
+    trans.classList.add('visible');
+    btn.textContent = 'Hide translation';
+  }
+}
+
+function playAudio() {
+  if ('speechSynthesis' in window && currentModalWord) {
+    const utterance = new SpeechSynthesisUtterance(currentModalWord);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    speechSynthesis.speak(utterance);
+  }
+}
+
+function speakText(text) {
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.8;
+    speechSynthesis.speak(utterance);
+  }
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('clickable-word') || e.target.classList.contains('hl-word')) {
+    const word = e.target.dataset.word;
+    if (vocabData[word]) openVocabModal(word);
+  }
+});
+
+document.getElementById('vocabModal').addEventListener('click', function(e) {
+  if (e.target === this) closeVocabModal();
+});
+
+// ==================== MATCHING EXERCISE (Screen 3) ====================
+const matchPairs = [
+  { word: 'suit', imgPath: 'assets/images/suit.png' },
+  { word: 'tie', imgPath: 'assets/images/tie.png' },
+  { word: 'uniform', imgPath: 'assets/images/uniform.png' },
+  { word: 'boots', imgPath: 'assets/images/boots.png' },
+  { word: 'glasses', imgPath: 'assets/images/glasses.png' },
+  { word: 'scarf', imgPath: 'assets/images/scarf.png' },
+  { word: 'disguise', imgPath: 'assets/images/disguise.png' },
+  { word: 'coat', imgPath: 'assets/images/coat.png' }
+];
+
+let matchState = { selected: null, attempts: {}, completed: 0, total: matchPairs.length };
+
+function buildMatchingExercise() {
+  const wordsDiv = document.getElementById('matchWords');
+  const targetsDiv = document.getElementById('matchTargets');
+  wordsDiv.innerHTML = '';
+  targetsDiv.innerHTML = '';
+  const shuffledWords = [...matchPairs].sort(() => Math.random() - 0.5);
+  const shuffledTargets = [...matchPairs].sort(() => Math.random() - 0.5);
+  shuffledWords.forEach(pair => {
+    const div = document.createElement('div');
+    div.className = 'match-word';
+    div.textContent = pair.word;
+    div.dataset.word = pair.word;
+    div.onclick = () => selectMatchWord(div);
+    wordsDiv.appendChild(div);
+  });
+  shuffledTargets.forEach(pair => {
+    const div = document.createElement('div');
+    div.className = 'match-target';
+    div.dataset.target = pair.word;
+    div.innerHTML = `<div class="match-picture"><img src="${pair.imgPath}" alt="${pair.word}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'padding:20px;text-align:center;color:#718096;font-size:13px\\'>${pair.word}</div>'"></div>`;
+    div.onclick = () => selectMatchTarget(div);
+    targetsDiv.appendChild(div);
+  });
+}
+
+function selectMatchWord(el) {
+  if (el.classList.contains('locked') || el.classList.contains('correct')) return;
+  document.querySelectorAll('.match-word').forEach(w => w.classList.remove('selected'));
+  el.classList.add('selected');
+  matchState.selected = el.dataset.word;
+}
+
+function selectMatchTarget(el) {
+  if (!matchState.selected || el.classList.contains('filled')) return;
+  const word = matchState.selected;
+  const target = el.dataset.target;
+  const wordEl = document.querySelector(`.match-word[data-word="${word}"]`);
+  if (!matchState.attempts[word]) matchState.attempts[word] = 0;
+  matchState.attempts[word]++;
+  if (word === target) {
+    playSound('correct');
+    wordEl.classList.remove('selected');
+    wordEl.classList.add('correct', 'locked');
+    el.classList.add('filled');
+    el.innerHTML = `<span class="placed-word">${word}</span>`;
+    matchState.selected = null;
+    matchState.completed++;
+    if (matchState.completed === matchState.total) showMatchResult();
+  } else {
+    playSound('error');
+    wordEl.classList.add('incorrect');
+    setTimeout(() => wordEl.classList.remove('incorrect'), 500);
+    wordEl.classList.remove('selected');
+    matchState.selected = null;
+    if (matchState.attempts[word] >= 2) {
+      const correctTarget = document.querySelector(`.match-target[data-target="${word}"]`);
+      wordEl.classList.add('correct', 'locked');
+      correctTarget.classList.add('filled');
+      correctTarget.innerHTML = `<span class="placed-word">${word}</span>`;
+      matchState.completed++;
+      if (matchState.completed === matchState.total) showMatchResult();
+    }
+  }
+}
+
+function showMatchResult() {
+  const resultDiv = document.getElementById('matchResult');
+  let firstTryCorrect = 0;
+  document.querySelectorAll('.match-word.correct').forEach(el => {
+    const word = el.dataset.word;
+    if (matchState.attempts[word] === 1) firstTryCorrect++;
+  });
+  resultDiv.textContent = `${firstTryCorrect} out of ${matchState.total} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetMatching() {
+  matchState = { selected: null, attempts: {}, completed: 0, total: matchPairs.length };
+  document.getElementById('matchResult').classList.remove('visible');
+  buildMatchingExercise();
+}
+
+// ==================== TASK B: FILL IN THE TEXT (Screen 4) ====================
+const textBlankAnswers = ['wears', 'is wearing', 'has', 'is working', 'finishes', 'is finishing'];
+
+let tbState = { attempts: {}, locked: {}, answered: 0 };
+
+function checkTextBlank(idx) {
+  if (tbState.locked[idx]) return;
+  const input = document.querySelector(`.fill-blank-input[data-tb="${idx}"]`);
+  const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+  if (!userAnswer) return;
+  if (!tbState.attempts[idx]) tbState.attempts[idx] = 0;
+  tbState.attempts[idx]++;
+  if (userAnswer === textBlankAnswers[idx].toLowerCase()) {
+    playSound('correct');
+    input.classList.remove('incorrect');
+    input.classList.add('correct');
+    input.readOnly = true;
+    tbState.locked[idx] = true;
+    tbState.answered++;
+  } else {
+    playSound('error');
+    input.classList.add('incorrect');
+    setTimeout(() => input.classList.remove('incorrect'), 500);
+    if (tbState.attempts[idx] >= 2) {
+      input.value = textBlankAnswers[idx];
+      input.classList.remove('incorrect');
+      input.classList.add('correct');
+      input.readOnly = true;
+      tbState.locked[idx] = true;
+      tbState.answered++;
+    }
+  }
+  if (tbState.answered === textBlankAnswers.length) showTextBlankResult();
+}
+
+function checkAllTextBlanks() {
+  for (let i = 0; i < textBlankAnswers.length; i++) checkTextBlank(i);
+}
+
+function showTextBlankResult() {
+  let firstTry = 0;
+  for (let i = 0; i < textBlankAnswers.length; i++) {
+    if (tbState.attempts[i] === 1) firstTry++;
+  }
+  const resultDiv = document.getElementById('fillResult');
+  resultDiv.textContent = `${firstTry} out of ${textBlankAnswers.length} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetTextBlanks() {
+  tbState = { attempts: {}, locked: {}, answered: 0 };
+  document.querySelectorAll('.fill-blank-input[data-tb]').forEach(inp => {
+    inp.value = '';
+    inp.readOnly = false;
+    inp.classList.remove('correct', 'incorrect');
+  });
+  document.getElementById('fillResult').classList.remove('visible');
+}
+
+function useVerb(verb) {
+  const active = document.activeElement;
+  let targetInput = null;
+  if (active && active.classList && active.classList.contains('fill-blank-input') &&
+      active.dataset.tb !== undefined && !active.readOnly && active.value.trim() === '') {
+    targetInput = active;
+  }
+  if (!targetInput) {
+    const inputs = document.querySelectorAll('.fill-blank-input[data-tb]');
+    for (const inp of inputs) {
+      if (!inp.readOnly && inp.value.trim() === '') { targetInput = inp; break; }
+    }
+  }
+  if (targetInput) {
+    targetInput.value = verb;
+    targetInput.focus();
+    targetInput.setSelectionRange(targetInput.value.length, targetInput.value.length);
+  }
+}
+
+// ==================== TASK C: COMPLETE THE RULES (dropdowns) ====================
+const ruleAnswers = { ruleSelect1: 'every day', ruleSelect2: 'today / now' };
+let ruleAttempts = { ruleSelect1: 0, ruleSelect2: 0 };
+let ruleLocked = { ruleSelect1: false, ruleSelect2: false };
+
+function checkRules() {
+  ['ruleSelect1', 'ruleSelect2'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (ruleLocked[id]) return;
+    if (!sel.value) {
+      sel.classList.add('incorrect');
+      setTimeout(() => sel.classList.remove('incorrect'), 600);
+      return;
+    }
+    ruleAttempts[id]++;
+    if (sel.value === ruleAnswers[id]) {
+      playSound('correct');
+      sel.classList.remove('incorrect');
+      sel.classList.add('correct');
+      sel.disabled = true;
+      ruleLocked[id] = true;
+    } else {
+      playSound('error');
+      sel.classList.add('incorrect');
+      setTimeout(() => sel.classList.remove('incorrect'), 600);
+      if (ruleAttempts[id] >= 2) {
+        sel.value = ruleAnswers[id];
+        sel.classList.remove('incorrect');
+        sel.classList.add('correct');
+        sel.disabled = true;
+        ruleLocked[id] = true;
+      }
+    }
+  });
+
+  if (ruleLocked.ruleSelect1 && ruleLocked.ruleSelect2) {
+    const resultDiv = document.getElementById('ruleResult');
+    const perfect = ruleAttempts.ruleSelect1 === 1 && ruleAttempts.ruleSelect2 === 1;
+    if (perfect) {
+      resultDiv.textContent = '✓ Perfect! You completed the rules correctly.';
+      resultDiv.style.background = '#f0fff4';
+      resultDiv.style.color = 'var(--success)';
+    } else {
+      resultDiv.textContent = 'Done! Remember: Present Simple = every day (routines), Present Continuous = today / now (happening now).';
+      resultDiv.style.background = '#fffbeb';
+      resultDiv.style.color = 'var(--accent-warm)';
+    }
+    resultDiv.classList.add('visible');
+  }
+}
+
+function resetRules() {
+  ruleAttempts = { ruleSelect1: 0, ruleSelect2: 0 };
+  ruleLocked = { ruleSelect1: false, ruleSelect2: false };
+  ['ruleSelect1', 'ruleSelect2'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.disabled = false;
+    sel.value = '';
+    sel.classList.remove('correct', 'incorrect');
+  });
+  const resultDiv = document.getElementById('ruleResult');
+  resultDiv.classList.remove('visible');
+  resultDiv.style.background = '';
+  resultDiv.style.color = '';
+}
+
+// ==================== AUDIO PLAYERS ====================
+function attachPlayer(varName, path, btnId) {
+  // returns nothing; individual players implemented below
+}
+
+let articleAudio = null;
+let audioPlaying = false;
+
+function toggleArticleAudio() {
+  const btn = document.getElementById('audioPlayBtn');
+  if (!articleAudio) {
+    articleAudio = new Audio('assets/audio/3.55.mp3');
+    articleAudio.addEventListener('ended', () => {
+      audioPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    articleAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.55.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (audioPlaying) {
+    articleAudio.pause();
+    audioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    articleAudio.play();
+    audioPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+let exAudio = null;
+let exAudioPlaying = false;
+
+function toggleExAudio() {
+  const btn = document.getElementById('exAudioPlayBtn');
+  if (!exAudio) {
+    exAudio = new Audio('assets/audio/3.56.mp3');
+    exAudio.addEventListener('ended', () => {
+      exAudioPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    exAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.56.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (exAudioPlaying) {
+    exAudio.pause();
+    exAudioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    exAudio.play();
+    exAudioPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+let epAudio = null;
+let epAudioPlaying = false;
+
+function toggleEpAudio() {
+  const btn = document.getElementById('epAudioPlayBtn');
+  if (!epAudio) {
+    epAudio = new Audio('assets/audio/3.57.mp3');
+    epAudio.addEventListener('ended', () => {
+      epAudioPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    epAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.57.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (epAudioPlaying) {
+    epAudio.pause();
+    epAudioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    epAudio.play();
+    epAudioPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+let cmAudio = null;
+let cmAudioPlaying = false;
+
+function toggleCmAudio() {
+  const btn = document.getElementById('cmAudioPlayBtn');
+  if (!cmAudio) {
+    cmAudio = new Audio('assets/audio/3.58.mp3');
+    cmAudio.addEventListener('ended', () => {
+      cmAudioPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    cmAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.58.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (cmAudioPlaying) {
+    cmAudio.pause();
+    cmAudioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    cmAudio.play();
+    cmAudioPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+let sandraAudio = null;
+let sandraAudioPlaying = false;
+
+function toggleSandraAudio() {
+  const btns = [document.getElementById('sandraAudioPlayBtn'), document.getElementById('sandraAudioPlayBtn2')];
+  if (!sandraAudio) {
+    sandraAudio = new Audio('assets/audio/3.59.mp3');
+    sandraAudio.addEventListener('ended', () => {
+      sandraAudioPlaying = false;
+      btns.forEach(b => { if (b) { b.textContent = '▶'; b.classList.remove('playing'); } });
+    });
+    sandraAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.59.mp3');
+      btns.forEach(b => { if (b) { b.textContent = '▶'; b.classList.remove('playing'); } });
+    });
+  }
+  if (sandraAudioPlaying) {
+    sandraAudio.pause();
+    sandraAudioPlaying = false;
+    btns.forEach(b => { if (b) { b.textContent = '▶'; b.classList.remove('playing'); } });
+  } else {
+    sandraAudio.play();
+    sandraAudioPlaying = true;
+    btns.forEach(b => { if (b) { b.textContent = '⏸'; b.classList.add('playing'); } });
+  }
+}
+
+let pronWordsAudio = null;
+let pronWordsPlaying = false;
+
+function togglePronWordsAudio() {
+  const btn = document.getElementById('pronWordsPlayBtn');
+  if (!pronWordsAudio) {
+    pronWordsAudio = new Audio('assets/audio/3.60.mp3');
+    pronWordsAudio.addEventListener('ended', () => {
+      pronWordsPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    pronWordsAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.60.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (pronWordsPlaying) {
+    pronWordsAudio.pause();
+    pronWordsPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    pronWordsAudio.play();
+    pronWordsPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+let pronSentAudio = null;
+let pronSentPlaying = false;
+
+function togglePronSentAudio() {
+  const btn = document.getElementById('pronSentPlayBtn');
+  if (!pronSentAudio) {
+    pronSentAudio = new Audio('assets/audio/3.61.mp3');
+    pronSentAudio.addEventListener('ended', () => {
+      pronSentPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+    pronSentAudio.addEventListener('error', () => {
+      alert('Audio file not found. Please check the path: assets/audio/3.61.mp3');
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    });
+  }
+  if (pronSentPlaying) {
+    pronSentAudio.pause();
+    pronSentPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    pronSentAudio.play();
+    pronSentPlaying = true;
+    btn.textContent = '⏸';
+    btn.classList.add('playing');
+  }
+}
+
+// ==================== 9B EXERCISE A: CIRCLE THE CORRECT FORM ====================
+const exAData = [
+  { num: '1', lines: [
+    [ {s:'A'}, {txt:'Hi, Sue. Where are you? In the office?'} ],
+    [ {s:'B'}, {txt:'No. '}, {ch:['I work', "I'm working"], a:1}, {txt:' at home today.'} ]
+  ]},
+  { num: '2', lines: [
+    [ {s:'A'}, {ch:['Do you do', 'Are you doing'], a:1}, {txt:' your homework?'} ],
+    [ {s:'B'}, {txt:"I don't have any homework today. "}, {ch:['I play', "I'm playing"], a:1}, {txt:' a computer game.'} ]
+  ]},
+  { num: '3', lines: [
+    [ {txt:'Marisa is a nurse. '}, {ch:['She works', "She's working"], a:0}, {txt:' in a hospital.'} ]
+  ]},
+  { num: '4', lines: [
+    [ {txt:"We're on holiday in France. "}, {ch:['We stay', "We're staying"], a:1}, {txt:' in a nice little hotel.'} ]
+  ]},
+  { num: '5', lines: [
+    [ {s:'A'}, {txt:'Hi. Can you talk or '}, {ch:['are you driving', 'do you drive'], a:0}, {txt:'?'} ],
+    [ {s:'B'}, {ch:["I don't drive", "I'm not driving"], a:1}, {txt:", but I can't talk now. "}, {ch:['I talk', "I'm talking"], a:1}, {txt:' to my boss.'} ]
+  ]},
+  { num: '6', lines: [
+    [ {txt:"Let's go to Mexico in December. It never "}, {ch:['rains', 'is raining'], a:0}, {txt:' there in the winter.'} ]
+  ]},
+  { num: '7', lines: [
+    [ {txt:'I usually '}, {ch:['have', 'am having'], a:0}, {txt:' a big lunch, but today I '}, {ch:['have', "I'm having"], a:1}, {txt:' a small salad.'} ]
+  ]}
+];
+
+let exAAnswers = [];
+let exATotal = 0;
+let exAState = { attempts: {}, locked: {}, solved: 0 };
+
+function buildExA() {
+  const container = document.getElementById('exAContainer');
+  container.innerHTML = '';
+  exAAnswers = [];
+  exATotal = 0;
+  exAData.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'ex-item';
+    item.lines.forEach((line, li) => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'ex-line';
+      let html = '';
+      if (li === 0) html += `<span class="ex-num">${item.num}</span>`;
+      line.forEach(seg => {
+        if (seg.s) html += `<span class="speaker">${seg.s}</span>`;
+        else if (seg.txt) html += seg.txt;
+        else if (seg.ch) {
+          const g = exATotal++;
+          exAAnswers[g] = seg.a;
+          html += `<span class="opt-choice" data-g="${g}" onclick="clickExA(${g},0)">${seg.ch[0]}</span>` +
+                  `<span class="slash">/</span>` +
+                  `<span class="opt-choice" data-g="${g}" onclick="clickExA(${g},1)">${seg.ch[1]}</span>`;
+        }
+      });
+      lineDiv.innerHTML = html;
+      itemDiv.appendChild(lineDiv);
+    });
+    container.appendChild(itemDiv);
+  });
+  document.querySelectorAll('#exAContainer .opt-choice').forEach(span => {
+    const g = span.dataset.g;
+    const group = document.querySelectorAll(`#exAContainer .opt-choice[data-g="${g}"]`);
+    span.dataset.o = Array.prototype.indexOf.call(group, span);
+  });
+}
+
+function clickExA(g, oi) {
+  if (exAState.locked[g]) return;
+  const opts = document.querySelectorAll(`#exAContainer .opt-choice[data-g="${g}"]`);
+  if (!exAState.attempts[g]) exAState.attempts[g] = 0;
+  exAState.attempts[g]++;
+  const correct = exAAnswers[g];
+  if (oi === correct) {
+    playSound('correct');
+    opts[oi].classList.add('circled', 'locked');
+    opts[1 - oi].classList.add('dimmed', 'locked');
+    exAState.locked[g] = true;
+    exAState.solved++;
+    if (exAState.solved === exATotal) showExAResult();
+  } else {
+    playSound('error');
+    opts[oi].classList.add('wrong');
+    setTimeout(() => opts[oi].classList.remove('wrong'), 500);
+    if (exAState.attempts[g] >= 2) {
+      opts[correct].classList.add('circled', 'locked');
+      opts[1 - correct].classList.add('dimmed', 'locked');
+      exAState.locked[g] = true;
+      exAState.solved++;
+      if (exAState.solved === exATotal) showExAResult();
+    }
+  }
+}
+
+function showExAResult() {
+  let firstTry = 0;
+  for (let g = 0; g < exATotal; g++) if (exAState.attempts[g] === 1) firstTry++;
+  const resultDiv = document.getElementById('exAResult');
+  resultDiv.textContent = `${firstTry} out of ${exATotal} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetExA() {
+  exAState = { attempts: {}, locked: {}, solved: 0 };
+  document.getElementById('exAResult').classList.remove('visible');
+  buildExA();
+}
+
+// ==================== 9B EXERCISE B: COMPLETE THE SENTENCES ====================
+const exBAnswers = [
+  ['is raining', "'s raining"],
+  ['have'],
+  ['are skiing', "'re skiing"],
+  ['are'],
+  ['watching'],
+  ['am doing', "'m doing"],
+  ['get up'],
+  ['have'],
+  ['is travelling', 'is traveling', "'s travelling", "'s traveling"],
+  ['do'],
+  ['go'],
+  ['is wearing', "'s wearing"],
+  ['are'],
+  ['going'],
+  ['go']
+];
+
+const exBData = [
+  { num: '1', lines: [
+    [ {txt:'Oh no! It '}, {bl:0}, {txt:" and I don't have my umbrella. "}, {vb:'(rain)'} ]
+  ]},
+  { num: '2', lines: [
+    [ {txt:'My father and I '}, {bl:1}, {txt:' dinner together every week. '}, {vb:'(have)'} ]
+  ]},
+  { num: '3', lines: [
+    [ {txt:'Louise and Carl are on holiday this week. They '}, {bl:2}, {txt:' in Switzerland. '}, {vb:'(ski)'} ]
+  ]},
+  { num: '4', lines: [
+    [ {s:'A'}, {txt:'Hi Sam. '}, {bl:3}, {txt:' you '}, {bl:4}, {txt:' the football match on TV? '}, {vb:'(watch)'} ],
+    [ {s:'B'}, {txt:'No, I '}, {bl:5}, {txt:' my French homework. '}, {vb:'(do)'} ]
+  ]},
+  { num: '5', lines: [
+    [ {txt:'I always '}, {bl:6}, {txt:' at 7.30, but I never '}, {bl:7}, {txt:' breakfast. '}, {vb:'(get up, have)'} ]
+  ]},
+  { num: '6', lines: [
+    [ {txt:'My sister '}, {bl:8}, {txt:' in Thailand at the moment. '}, {vb:'(travel)'} ]
+  ]},
+  { num: '7', lines: [
+    [ {s:'A'}, {txt:'What time '}, {bl:9}, {txt:' you usually '}, {bl:10}, {txt:' to bed? '}, {vb:'(go)'} ],
+    [ {s:'B'}, {txt:'At about 11.30.'} ]
+  ]},
+  { num: '8', lines: [
+    [ {txt:"Look. That's my brother over there. Can you see him? He "}, {bl:11}, {txt:' a blue hat. '}, {vb:'(wear)'} ]
+  ]},
+  { num: '9', lines: [
+    [ {s:'A'}, {txt:'Hello Nick. Where '}, {bl:12}, {txt:' you '}, {bl:13}, {txt:'? '}, {vb:'(go)'} ],
+    [ {s:'B'}, {txt:'To the gym. I always '}, {bl:14}, {txt:' on Tuesdays. '}, {vb:'(go)'} ]
+  ]}
+];
+
+let exBState = { attempts: {}, locked: {}, answered: 0 };
+const exBTotal = exBAnswers.length;
+
+function normalizeAnswer(str) {
+  return str.trim().toLowerCase().replace(/\s+/g, ' ').replace(/’/g, "'");
+}
+
+function buildExB() {
+  const container = document.getElementById('exBContainer');
+  container.innerHTML = '';
+  exBData.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'ex-item';
+    item.lines.forEach((line, li) => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'ex-line';
+      let html = '';
+      if (li === 0) html += `<span class="ex-num">${item.num}</span>`;
+      line.forEach(seg => {
+        if (seg.s) html += `<span class="speaker">${seg.s}</span>`;
+        else if (seg.txt) html += seg.txt;
+        else if (seg.bl !== undefined) {
+          html += `<input type="text" class="fill-blank-input" data-eb="${seg.bl}" placeholder="..." onkeydown="if(event.key==='Enter')checkExB(${seg.bl})">`;
+        }
+        else if (seg.vb) html += `<span class="verb-bracket">${seg.vb}</span>`;
+      });
+      lineDiv.innerHTML = html;
+      itemDiv.appendChild(lineDiv);
+    });
+    container.appendChild(itemDiv);
+  });
+}
+
+function checkExB(idx) {
+  if (exBState.locked[idx]) return;
+  const input = document.querySelector(`.fill-blank-input[data-eb="${idx}"]`);
+  const userAnswer = normalizeAnswer(input.value);
+  if (!userAnswer) return;
+  if (!exBState.attempts[idx]) exBState.attempts[idx] = 0;
+  exBState.attempts[idx]++;
+  const accepted = exBAnswers[idx].map(normalizeAnswer);
+  if (accepted.includes(userAnswer)) {
+    playSound('correct');
+    input.classList.remove('incorrect');
+    input.classList.add('correct');
+    input.readOnly = true;
+    exBState.locked[idx] = true;
+    exBState.answered++;
+  } else {
+    playSound('error');
+    input.classList.add('incorrect');
+    setTimeout(() => input.classList.remove('incorrect'), 500);
+    if (exBState.attempts[idx] >= 2) {
+      input.value = exBAnswers[idx][0];
+      input.classList.remove('incorrect');
+      input.classList.add('correct');
+      input.readOnly = true;
+      exBState.locked[idx] = true;
+      exBState.answered++;
+    }
+  }
+  if (exBState.answered === exBTotal) showExBResult();
+}
+
+function checkAllExB() {
+  for (let i = 0; i < exBTotal; i++) checkExB(i);
+}
+
+function showExBResult() {
+  let firstTry = 0;
+  for (let i = 0; i < exBTotal; i++) if (exBState.attempts[i] === 1) firstTry++;
+  const resultDiv = document.getElementById('exBResult');
+  resultDiv.textContent = `${firstTry} out of ${exBTotal} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetExB() {
+  exBState = { attempts: {}, locked: {}, answered: 0 };
+  document.querySelectorAll('.fill-blank-input[data-eb]').forEach(inp => {
+    inp.value = '';
+    inp.readOnly = false;
+    inp.classList.remove('correct', 'incorrect');
+  });
+  document.getElementById('exBResult').classList.remove('visible');
+}
+
+// ==================== SCREEN 6: TRUE / FALSE (Task a) ====================
+const tfStatements = [
+  { text: "The workers don't know that 'Andy' is their boss.", answer: 'T' },
+  { text: 'On Monday David is cooking in the kitchen.', answer: 'F' },
+  { text: 'The people in the kitchen work a lot of hours.', answer: 'T' },
+  { text: "On Tuesday David is angry because the workers aren't repairing things in all the rooms.", answer: 'T' },
+  { text: 'On Wednesday David is making breakfast.', answer: 'F' },
+  { text: 'The workers only have 30 minutes to clean rooms.', answer: 'F' },
+  { text: "David doesn't think cleaning is hard work.", answer: 'F' },
+  { text: "At the end of the week 'Andy' says who he really is.", answer: 'T' },
+  { text: 'All the workers get more money.', answer: 'F' }
+];
+
+let tfState = { attempts: {}, locked: {}, answered: 0 };
+
+function buildTF() {
+  const container = document.getElementById('tfList');
+  container.innerHTML = '';
+  tfStatements.forEach((st, idx) => {
+    const div = document.createElement('div');
+    div.className = 'tf-item';
+    div.innerHTML = `
+      <span class="tf-num">${idx + 1}</span>
+      <span class="tf-text">${st.text}</span>
+      <span class="tf-buttons">
+        <button class="tf-btn" data-tf="${idx}" data-choice="T" onclick="clickTF(${idx},'T')">T</button>
+        <button class="tf-btn" data-tf="${idx}" data-choice="F" onclick="clickTF(${idx},'F')">F</button>
+      </span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function clickTF(idx, choice) {
+  if (tfState.locked[idx]) return;
+  const buttons = document.querySelectorAll(`.tf-btn[data-tf="${idx}"]`);
+  if (!tfState.attempts[idx]) tfState.attempts[idx] = 0;
+  tfState.attempts[idx]++;
+  const correct = tfStatements[idx].answer;
+  if (choice === correct) {
+    playSound('correct');
+    buttons.forEach(b => {
+      b.classList.add('locked');
+      if (b.dataset.choice === choice) b.classList.add('correct');
+    });
+    tfState.locked[idx] = true;
+    tfState.answered++;
+    if (tfState.answered === tfStatements.length) showTFResult();
+  } else {
+    playSound('error');
+    const chosen = Array.from(buttons).find(b => b.dataset.choice === choice);
+    chosen.classList.add('incorrect');
+    setTimeout(() => chosen.classList.remove('incorrect'), 500);
+    if (tfState.attempts[idx] >= 2) {
+      buttons.forEach(b => {
+        b.classList.add('locked');
+        if (b.dataset.choice === correct) b.classList.add('reveal');
+      });
+      tfState.locked[idx] = true;
+      tfState.answered++;
+      if (tfState.answered === tfStatements.length) showTFResult();
+    }
+  }
+}
+
+function showTFResult() {
+  let firstTry = 0;
+  for (let i = 0; i < tfStatements.length; i++) if (tfState.attempts[i] === 1) firstTry++;
+  const resultDiv = document.getElementById('tfResult');
+  resultDiv.textContent = `${firstTry} out of ${tfStatements.length} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetTF() {
+  tfState = { attempts: {}, locked: {}, answered: 0 };
+  document.getElementById('tfResult').classList.remove('visible');
+  buildTF();
+}
+
+// ==================== SCREEN 6: UNDERLINE CLOTHES WORDS (Vocab a) ====================
+const uwSentences = [
+  [ ['He',null], ['usually',null], ['wears',null], ['a',null], ['suit,','suit'], ['but',null], ['today',null], ["he's",null], ['wearing',null], ['jeans,','jeans'], ['and',null], ['a',null], ['T-shirt.','T-shirt'] ],
+  [ ["He's",null], ['wearing',null], ['a',null], ['uniform:','uniform'], ['a',null], ['white',null], ['jacket','jacket'], ['and',null], ['a',null], ['hat.','hat'] ]
+];
+
+let uwData = [];
+let uwFound = {};
+let uwCount = 0;
+const uwTotal = 6;
+
+function buildUnderline() {
+  const container = document.getElementById('underlineSentences');
+  container.innerHTML = '';
+  uwData = [];
+  uwFound = {};
+  uwCount = 0;
+  uwSentences.forEach(line => {
+    const p = document.createElement('p');
+    let html = '';
+    line.forEach(tok => {
+      const i = uwData.length;
+      uwData.push({ d: tok[0], key: tok[1] });
+      html += `<span class="uw" data-u="${i}" onclick="clickUW(${i})">${tok[0]}</span> `;
+    });
+    p.innerHTML = html;
+    container.appendChild(p);
+  });
+}
+
+function clickUW(i) {
+  const item = uwData[i];
+  const span = document.querySelector(`.uw[data-u="${i}"]`);
+  if (!item.key) {
+    playSound('error');
+    span.classList.add('wrong');
+    setTimeout(() => span.classList.remove('wrong'), 500);
+    return;
+  }
+  if (uwFound[item.key]) {
+    openVocabModal(item.key);
+    return;
+  }
+  uwFound[item.key] = true;
+  uwCount++;
+  playSound('correct');
+  span.classList.add('found');
+  if (uwCount === uwTotal) {
+    const resultDiv = document.getElementById('uwResult');
+    resultDiv.textContent = '✓ Well done! You found all 6 clothes words. Click them again to see their meanings.';
+    resultDiv.classList.add('visible');
+  }
+}
+
+function resetUnderline() {
+  document.getElementById('uwResult').classList.remove('visible');
+  buildUnderline();
+}
+
+// ==================== SCREEN 6: CLOTHES MATCHING (Vocab b) ====================
+const clothesPictures = [
+  { num: 1, word: 'jeans', img: 'assets/images/clothes/jeans.png' },
+  { num: 2, word: 'sweater', img: 'assets/images/clothes/sweater.png' },
+  { num: 3, word: 'jacket', img: 'assets/images/clothes/jacket.png' },
+  { num: 4, word: 'skirt', img: 'assets/images/clothes/skirt.png' },
+  { num: 5, word: 'trousers', img: 'assets/images/clothes/trousers.png' },
+  { num: 6, word: 'shoes', img: 'assets/images/clothes/shoes.png' },
+  { num: 7, word: 'dress', img: 'assets/images/clothes/dress.png' },
+  { num: 8, word: 'T-shirt', img: 'assets/images/clothes/tshirt.png' },
+  { num: 9, word: 'suit', img: 'assets/images/clothes/suit.png' },
+  { num: 10, word: 'shirt', img: 'assets/images/clothes/shirt.png' }
+];
+
+let cmState = { selected: null, attempts: {}, completed: 0, total: clothesPictures.length };
+
+function buildClothesMatch() {
+  const wordsDiv = document.getElementById('clothesWords');
+  const gridDiv = document.getElementById('clothesGrid');
+  wordsDiv.innerHTML = '';
+  gridDiv.innerHTML = '';
+  const shuffled = [...clothesPictures].sort(() => Math.random() - 0.5);
+  shuffled.forEach(pic => {
+    const chip = document.createElement('div');
+    chip.className = 'clothes-word';
+    chip.textContent = pic.word;
+    chip.dataset.word = pic.word;
+    chip.onclick = () => selectClothesWord(chip);
+    wordsDiv.appendChild(chip);
+  });
+  clothesPictures.forEach(pic => {
+    const card = document.createElement('div');
+    card.className = 'clothes-card';
+    card.dataset.num = pic.num;
+    card.innerHTML = `
+      <span class="clothes-num">${pic.num}</span>
+      <img src="${pic.img}" alt="Picture ${pic.num}" onerror="this.style.display='none'">
+      <div class="clothes-label">—</div>
+    `;
+    card.onclick = () => selectClothesCard(card);
+    gridDiv.appendChild(card);
+  });
+}
+
+function selectClothesWord(el) {
+  if (el.classList.contains('correct')) return;
+  document.querySelectorAll('.clothes-word').forEach(w => w.classList.remove('selected'));
+  el.classList.add('selected');
+  cmState.selected = el.dataset.word;
+}
+
+function selectClothesCard(card) {
+  if (!cmState.selected || card.classList.contains('filled')) return;
+  const word = cmState.selected;
+  const num = parseInt(card.dataset.num, 10);
+  const pic = clothesPictures.find(p => p.num === num);
+  const chip = document.querySelector(`.clothes-word[data-word="${word}"]`);
+  if (!cmState.attempts[word]) cmState.attempts[word] = 0;
+  cmState.attempts[word]++;
+  if (pic.word === word) {
+    playSound('correct');
+    chip.classList.remove('selected');
+    chip.classList.add('correct');
+    card.classList.add('filled');
+    card.querySelector('.clothes-label').textContent = word;
+    cmState.selected = null;
+    cmState.completed++;
+    if (cmState.completed === cmState.total) showClothesResult();
+  } else {
+    playSound('error');
+    chip.classList.add('incorrect');
+    card.classList.add('incorrect');
+    setTimeout(() => { chip.classList.remove('incorrect', 'selected'); card.classList.remove('incorrect'); }, 500);
+    cmState.selected = null;
+    if (cmState.attempts[word] >= 2) {
+      const correctCard = document.querySelector(`.clothes-card[data-num="${clothesPictures.find(p => p.word === word).num}"]`);
+      chip.classList.add('correct');
+      correctCard.classList.add('filled');
+      correctCard.querySelector('.clothes-label').textContent = word;
+      cmState.completed++;
+      if (cmState.completed === cmState.total) showClothesResult();
+    }
+  }
+}
+
+function showClothesResult() {
+  let firstTry = 0;
+  document.querySelectorAll('.clothes-word.correct').forEach(chip => {
+    if (cmState.attempts[chip.dataset.word] === 1) firstTry++;
+  });
+  const resultDiv = document.getElementById('cmResult');
+  resultDiv.textContent = `${firstTry} out of ${cmState.total} correct on first try. Now listen to Track 3.58 to check!`;
+  resultDiv.classList.add('visible');
+}
+
+function resetClothesMatch() {
+  cmState = { selected: null, attempts: {}, completed: 0, total: clothesPictures.length };
+  document.getElementById('cmResult').classList.remove('visible');
+  buildClothesMatch();
+}
+
+// ==================== SCREEN 7: POSITIVE / NEGATIVE (4a) ====================
+let pnState = { attempts: 0, locked: false };
+const pnCorrect = 'positive';
+
+function clickPN(choice) {
+  if (pnState.locked) return;
+  const posBtn = document.getElementById('pnPos');
+  const negBtn = document.getElementById('pnNeg');
+  const chosen = choice === 'positive' ? posBtn : negBtn;
+  pnState.attempts++;
+  if (choice === pnCorrect) {
+    playSound('correct');
+    chosen.classList.add('correct', 'locked');
+    (choice === 'positive' ? negBtn : posBtn).classList.add('locked');
+    pnState.locked = true;
+    const resultDiv = document.getElementById('pnResult');
+    resultDiv.textContent = "✓ Correct! Sandra is positive: 'Yes, I love it... I really like working in a clothes shop.'";
+    resultDiv.classList.add('visible');
+  } else {
+    playSound('error');
+    chosen.classList.add('incorrect');
+    setTimeout(() => chosen.classList.remove('incorrect'), 500);
+    if (pnState.attempts >= 2) {
+      posBtn.classList.add('reveal', 'locked');
+      negBtn.classList.add('locked');
+      pnState.locked = true;
+      const resultDiv = document.getElementById('pnResult');
+      resultDiv.textContent = "Sandra is positive about her work experience: 'Yes, I love it... I really like working in a clothes shop.'";
+      resultDiv.style.background = '#fffbeb';
+      resultDiv.style.color = 'var(--accent-warm)';
+      resultDiv.classList.add('visible');
+    }
+  }
+}
+
+function resetPN() {
+  pnState = { attempts: 0, locked: false };
+  ['pnPos', 'pnNeg'].forEach(id => {
+    const b = document.getElementById(id);
+    b.classList.remove('correct', 'incorrect', 'reveal', 'locked');
+  });
+  const resultDiv = document.getElementById('pnResult');
+  resultDiv.classList.remove('visible');
+  resultDiv.style.background = '';
+  resultDiv.style.color = '';
+}
+
+// ==================== SCREEN 7: LISTENING ANSWERS + SCRIPT ====================
+function toggleLbAnswer(n, btn) {
+  const ans = document.getElementById('lbA' + n);
+  if (ans.classList.contains('visible')) {
+    ans.classList.remove('visible');
+    btn.textContent = 'Show answer';
+  } else {
+    ans.classList.add('visible');
+    btn.textContent = 'Hide answer';
+  }
+}
+
+function toggleScript(btn) {
+  const box = document.getElementById('scriptBox');
+  if (box.classList.contains('visible')) {
+    box.classList.remove('visible');
+    btn.textContent = 'Show script';
+  } else {
+    box.classList.add('visible');
+    btn.textContent = 'Hide script';
+  }
+}
+
+// ==================== GRAMMAR PRACTICE (Screen 5) ====================
+const grammarQuestions = [
+  { sentence: 'He ___ a suit every day for work.', options: ['wears', 'is wearing'], correct: 0, hint: 'every day' },
+  { sentence: 'Look! She ___ a red dress today!', options: ['wears', 'is wearing'], correct: 1, hint: 'Look! ... today' },
+  { sentence: 'Agents usually ___ dark clothes.', options: ['wear', 'are wearing'], correct: 0, hint: 'usually' },
+  { sentence: 'Right now, he ___ a disguise.', options: ['wears', 'is wearing'], correct: 1, hint: 'Right now' },
+  { sentence: 'She ___ to work by bus every morning.', options: ['goes', 'is going'], correct: 0, hint: 'every morning' },
+  { sentence: 'At the moment, the agent ___ in a bank.', options: ['works', 'is working'], correct: 1, hint: 'At the moment' },
+  { sentence: 'I ___ jeans at the weekend.', options: ['usually wear', 'am usually wearing'], correct: 0, hint: 'at the weekend (routine)' },
+  { sentence: 'What ___ you ___ right now?', options: ['do / wear', 'are / wearing'], correct: 1, hint: 'right now' }
+];
+
+let gpState = { attempts: {}, answered: 0 };
+
+function buildGrammarPractice() {
+  const container = document.getElementById('grammarPractice');
+  container.innerHTML = '';
+  grammarQuestions.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'gp-sentence';
+    div.innerHTML = `
+      <p><strong>${idx + 1}.</strong> ${q.sentence} <span style="font-size:13px; color:var(--text-light);">(${q.hint})</span></p>
+      <div class="gp-options">
+        ${q.options.map((opt, oi) => `<div class="gp-option" data-q="${idx}" data-o="${oi}" onclick="selectGrammarOption(${idx}, ${oi})">${opt}</div>`).join('')}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectGrammarOption(qIdx, oIdx) {
+  if (gpState[`q${qIdx}_locked`]) return;
+  const options = document.querySelectorAll(`.gp-option[data-q="${qIdx}"]`);
+  if (!gpState.attempts[qIdx]) gpState.attempts[qIdx] = 0;
+  gpState.attempts[qIdx]++;
+  const correct = grammarQuestions[qIdx].correct;
+  if (oIdx === correct) {
+    playSound('correct');
+    options[oIdx].classList.add('correct', 'locked');
+    options.forEach(o => { if (o != options[oIdx]) o.classList.add('locked'); });
+    gpState[`q${qIdx}_locked`] = true;
+    gpState.answered++;
+    if (gpState.answered === grammarQuestions.length) showGpResult();
+  } else {
+    playSound('error');
+    options[oIdx].classList.add('incorrect');
+    setTimeout(() => options[oIdx].classList.remove('incorrect'), 500);
+    if (gpState.attempts[qIdx] >= 2) {
+      options[correct].classList.add('correct', 'locked');
+      options.forEach(o => o.classList.add('locked'));
+      gpState[`q${qIdx}_locked`] = true;
+      gpState.answered++;
+      if (gpState.answered === grammarQuestions.length) showGpResult();
+    }
+  }
+}
+
+function showGpResult() {
+  let correct = 0;
+  Object.keys(gpState.attempts).forEach(k => { if (gpState.attempts[k] === 1) correct++; });
+  const resultDiv = document.getElementById('gpResult');
+  resultDiv.textContent = `${correct} out of ${grammarQuestions.length} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetGrammarPractice() {
+  gpState = { attempts: {}, answered: 0 };
+  document.getElementById('gpResult').classList.remove('visible');
+  buildGrammarPractice();
+}
+
+// ==================== READING QUESTIONS (Screen 8) ====================
+const readingQs = [
+  { sentence: 'Sarah wears a ___ on Mondays because she works in a hospital.', answer: 'uniform', options: ['uniform', 'disguise', 'scarf'] },
+  { sentence: 'Today she is wearing a suit and ___ because she\'s working in a bank.', answer: 'tie', options: ['hat', 'tie', 'boots'] },
+  { sentence: 'Right now, she is wearing ___ because she needs a disguise.', answer: 'glasses', options: ['gloves', 'glasses', 'boots'] },
+  { sentence: 'Her colleague Tom is wearing dark clothes and a ___.', answer: 'hat', options: ['tie', 'coat', 'hat'] },
+  { sentence: 'Sarah usually ___ different clothes every day.', answer: 'wears', options: ['wears', 'is wearing', 'wear'] }
+];
+
+let readingState = { attempts: {}, answered: 0 };
+
+function buildReadingQuestions() {
+  const container = document.getElementById('readingQuestions');
+  container.innerHTML = '';
+  readingQs.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `
+      <label><strong>${idx + 1}.</strong> ${q.sentence}</label>
+      <div class="gp-options">
+        ${q.options.map((opt, oi) => `<div class="gp-option" data-rq="${idx}" data-ro="${oi}" onclick="selectReadingOption(${idx}, ${oi})">${opt}</div>`).join('')}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectReadingOption(qIdx, oIdx) {
+  if (readingState[`q${qIdx}_locked`]) return;
+  const options = document.querySelectorAll(`.gp-option[data-rq="${qIdx}"]`);
+  if (!readingState.attempts[qIdx]) readingState.attempts[qIdx] = 0;
+  readingState.attempts[qIdx]++;
+  const correctIdx = readingQs[qIdx].options.indexOf(readingQs[qIdx].answer);
+  if (oIdx === correctIdx) {
+    playSound('correct');
+    options[oIdx].classList.add('correct', 'locked');
+    options.forEach(o => { if (o != options[oIdx]) o.classList.add('locked'); });
+    readingState[`q${qIdx}_locked`] = true;
+    readingState.answered++;
+    if (readingState.answered === readingQs.length) showReadingResult();
+  } else {
+    playSound('error');
+    options[oIdx].classList.add('incorrect');
+    setTimeout(() => options[oIdx].classList.remove('incorrect'), 500);
+    if (readingState.attempts[qIdx] >= 2) {
+      options[correctIdx].classList.add('correct', 'locked');
+      options.forEach(o => o.classList.add('locked'));
+      readingState[`q${qIdx}_locked`] = true;
+      readingState.answered++;
+      if (readingState.answered === readingQs.length) showReadingResult();
+    }
+  }
+}
+
+function showReadingResult() {
+  let correct = 0;
+  Object.keys(readingState.attempts).forEach(k => { if (readingState.attempts[k] === 1) correct++; });
+  const resultDiv = document.getElementById('readingResult');
+  resultDiv.textContent = `${correct} out of ${readingQs.length} correct on first try`;
+  resultDiv.classList.add('visible');
+}
+
+function resetReading() {
+  readingState = { attempts: {}, answered: 0 };
+  document.getElementById('readingResult').classList.remove('visible');
+  buildReadingQuestions();
+}
+
+// ==================== REVIEW (Screen 11) ====================
+const reviewQs = [
+  { type: 'fill', sentence: 'He ___ (wear) a uniform every day.', answer: 'wears' },
+  { type: 'fill', sentence: 'Right now, she ___ (wear) a disguise.', answer: 'is wearing' },
+  { type: 'fill', sentence: 'They ___ (not/wear) suits at this company — they wear jeans.', answer: "don't wear" },
+  { type: 'choice', sentence: 'Which word means "special clothes for a job"?', options: ['disguise', 'uniform', 'scarf'], correct: 'uniform' },
+  { type: 'choice', sentence: 'Which sentence is Present Continuous?', options: ['She wears glasses every day.', 'She is wearing glasses now.', 'She doesn\'t wear glasses.'], correct: 'She is wearing glasses now.' },
+  { type: 'fill', sentence: 'Look! The agent ___ (put) on a hat.', answer: 'is putting' }
+];
+
+let reviewState = { attempts: {}, answered: 0 };
+
+function buildReview() {
+  const container = document.getElementById('reviewQuestions');
+  container.innerHTML = '';
+  reviewQs.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    if (q.type === 'fill') {
+      div.innerHTML = `
+        <label><strong>${idx + 1}.</strong> ${q.sentence}</label>
+        <input type="text" class="review-input" data-ri="${idx}" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')checkReviewFill(${idx})">
+        <button class="reset-btn" style="margin-top:8px; display:inline-block; width:auto;" onclick="checkReviewFill(${idx})">Check</button>
+      `;
+    } else {
+      div.innerHTML = `
+        <label><strong>${idx + 1}.</strong> ${q.sentence}</label>
+        <div class="gp-options">
+          ${q.options.map(opt => `<div class="gp-option" data-rvi="${idx}" data-rvo="${opt}" onclick="checkReviewChoice(${idx}, '${opt.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        </div>
+      `;
+    }
+    container.appendChild(div);
+  });
+}
+
+function checkReviewFill(idx) {
+  if (reviewState[`q${idx}_locked`]) return;
+  const input = document.querySelector(`.review-input[data-ri="${idx}"]`);
+  const userAnswer = input.value.trim().toLowerCase();
+  const correct = reviewQs[idx].answer.toLowerCase();
+  if (!reviewState.attempts[idx]) reviewState.attempts[idx] = 0;
+  reviewState.attempts[idx]++;
+  if (userAnswer === correct) {
+    playSound('correct');
+    input.classList.remove('incorrect');
+    input.classList.add('correct');
+    input.readOnly = true;
+    reviewState[`q${idx}_locked`] = true;
+    reviewState.answered++;
+    if (reviewState.answered === reviewQs.length) showReviewResult();
+  } else {
+    playSound('error');
+    input.classList.add('incorrect');
+    setTimeout(() => input.classList.remove('incorrect'), 500);
+    if (reviewState.attempts[idx] >= 2) {
+      input.value = reviewQs[idx].answer;
+      input.classList.add('correct');
+      input.readOnly = true;
+      reviewState[`q${idx}_locked`] = true;
+      reviewState.answered++;
+      if (reviewState.answered === reviewQs.length) showReviewResult();
+    }
+  }
+}
+
+function checkReviewChoice(idx, selected) {
+  if (reviewState[`q${idx}_locked`]) return;
+  const options = document.querySelectorAll(`.gp-option[data-rvi="${idx}"]`);
+  if (!reviewState.attempts[idx]) reviewState.attempts[idx] = 0;
+  reviewState.attempts[idx]++;
+  const correct = reviewQs[idx].correct;
+  if (selected === correct) {
+    playSound('correct');
+    options.forEach(o => {
+      if (o.dataset.rvo === selected) o.classList.add('correct', 'locked');
+      else o.classList.add('locked');
+    });
+    reviewState[`q${idx}_locked`] = true;
+    reviewState.answered++;
+    if (reviewState.answered === reviewQs.length) showReviewResult();
+  } else {
+    playSound('error');
+    const selOpt = Array.from(options).find(o => o.dataset.rvo === selected);
+    selOpt.classList.add('incorrect');
+    setTimeout(() => selOpt.classList.remove('incorrect'), 500);
+    if (reviewState.attempts[idx] >= 2) {
+      options.forEach(o => {
+        if (o.dataset.rvo === correct) o.classList.add('correct', 'locked');
+        o.classList.add('locked');
+      });
+      reviewState[`q${idx}_locked`] = true;
+      reviewState.answered++;
+      if (reviewState.answered === reviewQs.length) showReviewResult();
+    }
+  }
+}
+
+function showReviewResult() {
+  let correct = 0;
+  Object.keys(reviewState.attempts).forEach(k => { if (reviewState.attempts[k] === 1) correct++; });
+  const resultDiv = document.getElementById('reviewResult');
+  resultDiv.textContent = `${correct} out of ${reviewQs.length} correct on first try — well done!`;
+  resultDiv.classList.add('visible');
+}
+
+function resetReview() {
+  reviewState = { attempts: {}, answered: 0 };
+  document.getElementById('reviewResult').classList.remove('visible');
+  buildReview();
+}
+
+// ==================== SOUNDS ====================
+function playSound(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    if (type === 'correct') {
+      osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.35);
+    } else {
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.setValueAtTime(200, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
+    }
+  } catch(e) {}
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', function() {
+  initProgressDots();
+  buildVocabGrid();
+  buildMatchingExercise();
+  buildExA();
+  buildExB();
+  buildTF();
+  buildUnderline();
+  buildClothesMatch();
+  buildGrammarPractice();
+  buildReadingQuestions();
+  buildReview();
+  updateNavigation();
+});
+</script>
+</body>
+</html>
